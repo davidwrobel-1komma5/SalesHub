@@ -4,20 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1KOMMA5° - Heizungsförderungs-Rechner</title>
-    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     colors: {
-                        brand: '#7d00ba',       /* Elegant Vibrant Purple from reference */
+                        brand: '#7d00ba',       /* Elegant Vibrant Purple */
                         brandLight: '#fcf6ff',  /* Soft white-lavender tint */
-                        brandBg: '#f9f0ff',     /* Soft lavender-pink background from screenshot */
+                        brandBg: '#f9f0ff',     /* Soft lavender-pink background */
                         dark: '#1c1c1c',        /* Almost black text and buttons */
                         mediumGray: '#f4f4f7'
                     },
@@ -33,7 +30,7 @@
     </script>
     <style>
         body {
-            background-color: #ebe0f0; /* Soft warm purple-pink background from screenshot */
+            background-color: #ebe0f0; 
             color: #1c1c1c;
             font-family: 'Inter', sans-serif;
         }
@@ -53,7 +50,7 @@
         input[type="range"]::-webkit-slider-thumb:hover {
             transform: scale(1.1);
         }
-        /* Hide arrows for number inputs for a cleaner tech look */
+        /* Hide arrows for number inputs */
         input::-webkit-outer-spin-button,
         input::-webkit-inner-spin-button {
             -webkit-appearance: none;
@@ -66,7 +63,6 @@
 </head>
 <body class="min-h-screen antialiased pb-24">
 
-    <!-- Main Navigation Bar (Clean & Tech-focused) -->
     <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-brand/5 py-4 px-6 md:px-12 flex justify-between items-center">
         <div class="flex items-center gap-2">
             <span class="text-xl font-black tracking-tighter uppercase text-dark">1KOMMA5<span class="text-brand">°</span></span>
@@ -79,7 +75,6 @@
         </div>
     </nav>
 
-    <!-- Header / Hero section based on screenshot -->
     <header class="py-12 md:py-20 px-6 md:px-12 max-w-6xl mx-auto text-left">
         <span class="text-brand font-extrabold text-sm uppercase tracking-[0.2em] mb-4 block">Heizungsförderung 2026</span>
         <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.05] text-dark">
@@ -89,10 +84,8 @@
 
     <main class="px-6 md:px-12 max-w-6xl mx-auto space-y-12">
 
-        <!-- BEN-TO GRID AREA -->
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
-            <!-- LEFT CONTAINER: Bento Interactive Simulator Panel -->
             <section id="simulator" class="lg:col-span-7 bg-white rounded-3xl p-6 md:p-10 shadow-soft border border-brand/5 flex flex-col justify-between">
                 <div class="space-y-8">
                     <div class="flex items-center justify-between pb-4 border-b border-gray-100">
@@ -100,7 +93,6 @@
                         <span class="text-xs font-bold text-brand uppercase tracking-wider bg-brandLight px-3 py-1 rounded-full">Individuelle Live-Berechnung</span>
                     </div>
 
-                    <!-- Step 1: Sanierungszeitpunkt (Degression) -->
                     <div>
                         <div class="flex justify-between items-center mb-3">
                             <label class="text-xs font-extrabold text-gray-500 uppercase tracking-wider">Geplanter Einbau</label>
@@ -117,25 +109,23 @@
                         </div>
                     </div>
 
-                    <!-- Step 2: Household Income Input (Free Text with +/- Stepper) -->
                     <div>
                         <label class="text-xs font-extrabold text-gray-500 uppercase tracking-wider block mb-2">Haushaltseinkommen (zvE)</label>
                         <p class="text-xs text-dark/60 mb-3">
                             Geben Sie das zu versteuernde Jahreshaushaltseinkommen (zvE) Ihres Haushalts ein.
                         </p>
                         <div class="flex items-center gap-2">
-                            <button type="button" onclick="adjustIncome(-5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl bord[...]
+                            <button type="button" onclick="adjustIncome(-5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl">-</button>
                             <div class="relative flex-1">
-                                <input type="number" id="input-income" value="70000" min="0" step="5000" class="block w-full rounded-2xl border border-gray-300 py-3 pl-5 pr-12 text-[#1c1c1c] placehold[...]
+                                <input type="number" id="input-income" value="70000" min="0" step="5000" class="block w-full rounded-2xl border border-gray-300 py-3 pl-5 pr-12 text-[#1c1c1c] placeholder-gray-400 focus:border-brand focus:ring-brand font-semibold text-lg">
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-5">
                                     <span class="text-gray-400 font-bold text-lg">€</span>
                                 </div>
                             </div>
-                            <button type="button" onclick="adjustIncome(5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl borde[...]
+                            <button type="button" onclick="adjustIncome(5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl">+</button>
                         </div>
                     </div>
 
-                    <!-- Step 3: Kinderanzahl im Haushalt (Toggle Switch) -->
                     <div class="flex items-center justify-between p-4 bg-brandLight rounded-2xl border border-brand/10 cursor-pointer select-none" onclick="toggleCheckbox('check-kids')">
                         <div class="flex-1 pr-4">
                             <span class="text-xs font-extrabold text-brand uppercase tracking-wider block mb-1">Kinderfreibetrag</span>
@@ -149,7 +139,6 @@
                         </div>
                     </div>
 
-                    <!-- Step 4: Klimabonus Option (Toggle Switch) -->
                     <div class="flex items-center justify-between p-4 bg-brandLight rounded-2xl border border-brand/10 cursor-pointer select-none" onclick="toggleCheckbox('check-climate')">
                         <div class="flex-1 pr-4">
                             <span class="text-xs font-extrabold text-brand uppercase tracking-wider block mb-1">Klimageschwindigkeitsbonus</span>
@@ -165,7 +154,6 @@
                 </div>
             </section>
 
-            <!-- RIGHT CONTAINER: Live Output Card (Minimal & Dark) -->
             <section class="lg:col-span-5 bg-dark text-white rounded-3xl p-8 shadow-xl flex flex-col justify-between min-h-[500px]">
                 <div class="space-y-6">
                     <div>
@@ -197,17 +185,15 @@
                 <div class="border-t border-white/10 pt-6 mt-6">
                     <p class="text-xs font-bold text-brand uppercase tracking-wider mb-2">Deine Konfiguration</p>
                     <p id="res-description" class="text-xs text-white/70 leading-relaxed">
-                        Durch Ihr eingegebenes Haushaltseinkommen (70.000 €) liegt das relevante Einkommen bei 70.000 €. Daher qualifizieren Sie sich nicht für den Einkommensbonus. Sie erhalten 3[...]
+                        Berechnung wird geladen...
                     </p>
                 </div>
             </section>
 
         </div>
 
-        <!-- LOWER SECTION: Bento Cards & Trend charts -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
             
-            <!-- Bento Card: Live Charts / Trends -->
             <div id="trends" class="bg-white rounded-3xl p-6 md:p-8 shadow-soft border border-brand/5">
                 <span class="text-brand font-bold text-xs uppercase tracking-widest mb-1 block">Entwicklung über Zeit</span>
                 <h3 class="text-xl font-extrabold tracking-tight mb-4">Degression der Höchstgrenzen</h3>
@@ -219,7 +205,6 @@
                 </div>
             </div>
 
-            <!-- Bento Card: 80% Premium-Fokus -->
             <div class="bg-white rounded-3xl p-6 md:p-8 shadow-soft border border-brand/5 relative overflow-hidden flex flex-col justify-between">
                 <div>
                     <span class="text-brand font-bold text-xs uppercase tracking-widest mb-1 block">Wichtigste Neuerung</span>
@@ -238,14 +223,13 @@
 
         </div>
 
-        <!-- SECTION: Law changes & EE Requirements -->
         <section id="gmodg" class="pt-4">
             <div class="bg-white rounded-3xl p-6 md:p-10 shadow-soft border border-brand/5 max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
                 <div class="flex-1">
                     <span class="text-brand font-bold text-xs uppercase tracking-widest mb-1 block">Die "Biotreppe" (GModG 2026)</span>
                     <h3 class="text-2xl font-black mb-4">Einbaupflichten für grüne Gase im Bestand</h3>
                     <p class="text-dark/70 text-sm leading-relaxed mb-6">
-                        Ab 2029 müssen Gasheizungen im Bestand schrittweise auf regenerative Energieträger (wie Biomethan oder Wasserstoff) umgestellt werden. Wer heute noch auf fossile Heizungen se[...]
+                        Ab 2029 müssen Gasheizungen im Bestand schrittweise auf regenerative Energieträger (wie Biomethan oder Wasserstoff) umgestellt werden. Wer heute noch auf fossile Heizungen setzt, baut ein hohes Kostenrisiko.
                     </p>
                     <div class="space-y-3">
                         <div class="p-3.5 bg-brandLight rounded-xl flex justify-between items-center border border-brand/10">
@@ -272,7 +256,6 @@
         
         const periods = ["2026", "Anfang 27", "Ende 27", "Anfang 28", "Ende 28", "Anfang 29", "Ende 29", "Anfang 30", "Ende 30", "2031"];
         const costSteps = [28000, 27250, 26500, 25750, 25000, 24250, 23500, 22750, 22000, 22000];
-        // Klimageschwindigkeitsbonus starts now at 16% as requested
         const climateBonusSteps = [16, 12, 8, 4, 0, 0, 0, 0, 0, 0];
 
         window.onload = function() {
@@ -340,7 +323,7 @@
             let climateBonus = useClimate ? climateBonusSteps[currentStep] : 0;
             let incomeBonus = 0;
 
-            // Apply income brackets based on adjusted effective income
+            // Apply income brackets
             if (effectiveZvE <= 30000) {
                 incomeBonus = 40;
             } else if (effectiveZvE <= 40000) {
@@ -353,7 +336,7 @@
 
             let totalRate = baseRate + climateBonus + incomeBonus;
             
-            // Calculate cap: 80% for low incomes (effective <= 30k), 70% for others
+            // Calculate cap: 80% for low incomes, 70% for others
             let cap = (effectiveZvE <= 30000) ? 80 : 70;
             if (totalRate > cap) totalRate = cap;
 
@@ -367,19 +350,15 @@
             document.getElementById('res-rate').innerText = totalRate + "% Förderquote" + (totalRate === cap ? " (Gedeckelt)" : "");
 
             // Generate customized explanation text
-            let childText = hasKids 
-                ? ` abzüglich des einmaligen Kinderfreibetrags von <strong>10.000 €</strong>,`
-                : "";
-            
-            let description = `Durch Ihr eingegebenes Haushaltseinkommen (<strong>${rawZvE.toLocaleString('de-DE')} €</strong>)${childText} beträgt Ihr fiktiv relevantes Einkommen für die KfW-För[...]
+            let childText = hasKids ? ` abzüglich des Kinderfreibetrags v. 10.000 €` : "";
+            let description = `Durch Ihr Haushaltseinkommen (${rawZvE.toLocaleString('de-DE')} €)${childText} liegt das bewertete Einkommen bei <strong>${effectiveZvE.toLocaleString('de-DE')} €</strong>. `;
             
             if (incomeBonus > 0) {
-                description += `Damit qualifizieren Sie sich für einen <strong>Einkommensbonus von +${incomeBonus}%</strong>. `;
+                description += `Sie erhalten einen Einkommensbonus von +${incomeBonus}%. `;
             } else {
-                description += "Damit erhalten Sie keinen einkommensabhängigen Sonderbonus (ab <= 50.000 € bereinigtem Einkommen). ";
+                description += "Es besteht kein Anspruch auf einen Einkommensbonus. ";
             }
-
-            description += `Zusammen mit der Basisförderung (30%) und dem Klimageschwindigkeitsbonus (+${climateBonus}%) ergibt sich eine Förderquote von <strong>${totalRate}%</strong> angewendet au[...]
+            description += `Zusammen mit der Basisförderung und dem Klimabonus ergibt das eine Quote von <strong>${totalRate}%</strong> auf maximal ${baseCost.toLocaleString('de-DE')} € Kostenbasis.`;
 
             document.getElementById('res-description').innerHTML = description;
         }
