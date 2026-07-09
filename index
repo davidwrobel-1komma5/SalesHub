@@ -3,9 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>1KOMMA5° - Heizungsförderungs-Rechner</title>
+    <title>1KOMMA5° - SalesHub Beratungscenter</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -23,6 +24,7 @@
                     },
                     boxShadow: {
                         'soft': '0 8px 30px rgb(125 0 186 / 0.03)',
+                        'premium': '0 20px 40px rgba(125, 0, 186, 0.05)'
                     }
                 }
             }
@@ -34,376 +36,125 @@
             color: #1c1c1c;
             font-family: 'Inter', sans-serif;
         }
-        /* Custom styled range slider */
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: #7d00ba;
-            cursor: pointer;
-            border: 3px solid #ffffff;
-            box-shadow: 0 2px 6px rgba(125,0,186,0.3);
-            transition: transform 0.1s ease;
-        }
-        input[type="range"]::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-        }
-        /* Hide arrows for number inputs */
-        input::-webkit-outer-spin-button,
-        input::-webkit-inner-spin-button {
-            -webkit-appearance: none;
-            margin: 0;
-        }
-        input[type=number] {
-            -moz-appearance: textfield;
-        }
     </style>
 </head>
 <body class="min-h-screen antialiased pb-24">
 
+    <!-- Main Navigation Bar -->
     <nav class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-brand/5 py-4 px-6 md:px-12 flex justify-between items-center">
-        <a href="index.html" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+        <div class="flex items-center gap-2">
             <span class="text-xl font-black tracking-tighter uppercase text-dark">1KOMMA5<span class="text-brand">°</span></span>
-            <span class="text-[10px] bg-brand/10 text-brand font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">Reform 2026</span>
-        </a>
-        <div class="hidden md:flex gap-8 text-sm font-semibold text-dark/70">
-            <a href="index.html" class="text-brand hover:text-brand/80 transition-colors font-bold">← Zur Hauptseite</a>
-            <a href="#simulator" class="hover:text-brand transition-colors">Förderrechner</a>
-            <a href="#trends" class="hover:text-brand transition-colors">Degressions-Charts</a>
-            <a href="#gmodg" class="hover:text-brand transition-colors">Gesetzliche EE-Pflichten</a>
+            <span class="text-[10px] bg-brand/10 text-brand font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">SalesHub</span>
+        </div>
+        <div class="hidden md:flex gap-6 text-xs font-bold text-dark/40 uppercase tracking-widest">
+            <span>Beratungscenter 2026</span>
         </div>
     </nav>
 
-    <header class="py-12 md:py-20 px-6 md:px-12 max-w-6xl mx-auto text-left">
-        <span class="text-brand font-extrabold text-sm uppercase tracking-[0.2em] mb-4 block">Heizungsförderung 2026</span>
+    <!-- Header / Hero section -->
+    <header class="py-16 md:py-24 px-6 md:px-12 max-w-6xl mx-auto text-left">
+        <span class="text-brand font-extrabold text-sm uppercase tracking-[0.2em] mb-4 block">Digitales Beratungscenter</span>
         <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight mb-6 leading-[1.05] text-dark">
-            Der Boost für deine <br class="hidden md:inline">Wärmepumpe
+            Deine Schaltzentrale <br class="hidden md:inline">für die Energiewende
         </h1>
+        <p class="text-dark/70 text-sm md:text-base max-w-2xl leading-relaxed">
+            Willkommen im 1KOMMA5° SalesHub. Nutzen Sie unsere interaktiven Module gemeinsam mit Ihrem Berater, um Förderungen live zu berechnen, Energiesysteme zu planen und Ihre persönliche CO₂-Kompensation zu maximieren.
+        </p>
     </header>
 
-    <main class="px-6 md:px-12 max-w-6xl mx-auto space-y-12">
+    <main class="px-6 md:px-12 max-w-6xl mx-auto">
 
-        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
+        <!-- BENTO MAIN GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-8 items-stretch">
 
-            <section id="simulator" class="lg:col-span-7 bg-white rounded-3xl p-6 md:p-10 shadow-soft border border-brand/5 flex flex-col justify-between">
-                <div class="space-y-8">
-                    <div class="flex items-center justify-between pb-4 border-b border-gray-100">
-                        <h2 class="text-2xl font-extrabold tracking-tight">Dein Fördersimulator</h2>
-                        <span class="text-xs font-bold text-brand uppercase tracking-wider bg-brandLight px-3 py-1 rounded-full">Individuelle Live-Berechnung</span>
-                    </div>
-
-                    <div>
-                        <div class="flex justify-between items-center mb-3">
-                            <label class="text-xs font-extrabold text-gray-500 uppercase tracking-wider">Geplanter Einbau</label>
-                            <span id="label-period" class="text-brand font-black text-lg bg-brandLight px-4 py-1 rounded-lg border border-brand/10">2026</span>
-                        </div>
-                        <p class="text-xs text-dark/60 mb-4">
-                            Die maximal anrechenbaren Kosten und die Prozentsätze für den Klimabonus sinken halbjährlich.
-                        </p>
-                        <input type="range" id="input-period" min="0" max="9" value="0" class="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-brand">
-                        <div class="flex justify-between text-[10px] font-bold text-dark/40 px-1 mt-2">
-                            <span>2026 (START)</span>
-                            <span>MITTE 2028</span>
-                            <span>ENDE 2030</span>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="text-xs font-extrabold text-gray-500 uppercase tracking-wider block mb-2">Haushaltseinkommen (zvE)</label>
-                        <p class="text-xs text-dark/60 mb-3">
-                            Geben Sie das zu versteuernde Jahreshaushaltseinkommen (zvE) Ihres Haushalts ein.
-                        </p>
-                        <div class="flex items-center gap-2">
-                            <button type="button" onclick="adjustIncome(-5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl">-</button>
-                            <div class="relative flex-1">
-                                <input type="number" id="input-income" value="70000" min="0" step="5000" class="block w-full rounded-2xl border border-gray-300 py-3 pl-5 pr-12 text-[#1c1c1c] placeholder-gray-400 focus:border-brand focus:ring-brand font-semibold text-lg">
-                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-5">
-                                    <span class="text-gray-400 font-bold text-lg">€</span>
-                                </div>
-                            </div>
-                            <button type="button" onclick="adjustIncome(5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl">+</button>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-4 bg-brandLight rounded-2xl border border-brand/10 cursor-pointer select-none" onclick="toggleCheckbox('check-kids')">
-                        <div class="flex-1 pr-4">
-                            <span class="text-xs font-extrabold text-brand uppercase tracking-wider block mb-1">Kinderfreibetrag</span>
-                            <h4 class="text-sm font-bold text-dark">Kindergeldberechtigtes Kind im Haushalt</h4>
-                            <p class="text-[11px] text-dark/60">Reduziert das bewertete Haushaltseinkommen einmalig um <strong>10.000 €</strong>.</p>
-                        </div>
-                        <div class="relative">
-                            <input type="checkbox" id="check-kids" class="sr-only">
-                            <div class="w-11 h-6 bg-gray-200 rounded-full transition-colors duration-200" id="toggle-bg-kids"></div>
-                            <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200" id="toggle-dot-kids"></div>
-                        </div>
-                    </div>
-
-                    <div class="flex items-center justify-between p-4 bg-brandLight rounded-2xl border border-brand/10 cursor-pointer select-none" onclick="toggleCheckbox('check-climate')">
-                        <div class="flex-1 pr-4">
-                            <span class="text-xs font-extrabold text-brand uppercase tracking-wider block mb-1">Klimageschwindigkeitsbonus</span>
-                            <h4 class="text-sm font-bold text-dark">Fossile Heizung wird ersetzt</h4>
-                            <p class="text-[11px] text-dark/60">Für funktionstüchtige Öl-, Kohle-, Gasetagenheizungen oder Gasheizungen älter als 20 Jahre.</p>
-                        </div>
-                        <div class="relative">
-                            <input type="checkbox" id="check-climate" class="sr-only" checked>
-                            <div class="w-11 h-6 bg-brand rounded-full transition-colors duration-200" id="toggle-bg-climate"></div>
-                            <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-200 translate-x-5" id="toggle-dot-climate"></div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="lg:col-span-5 bg-dark text-white rounded-3xl p-8 shadow-xl flex flex-col justify-between min-h-[500px]">
-                <div class="space-y-6">
-                    <div>
-                        <span class="text-brand font-extrabold text-xs uppercase tracking-[0.2em] block mb-2">Voraussichtliche Förderung</span>
-                        <h3 id="res-total" class="text-5xl md:text-6xl font-black tracking-tight text-white">12.880 €</h3>
-                        <span id="res-rate" class="inline-block text-[11px] bg-brand text-white px-3 py-1 rounded-full font-bold uppercase tracking-wider mt-3">46% Förderquote</span>
-                    </div>
-
-                    <div class="border-t border-white/10 pt-6 space-y-4">
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="text-white/60">Förderfähige Kostenbasis:</span>
-                            <span id="res-basis" class="font-extrabold text-white text-base">28.000 €</span>
-                        </div>
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="text-white/60">Basisförderung:</span>
-                            <span class="font-bold text-white">30 %</span>
-                        </div>
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="text-white/60">Klimageschwindigkeitsbonus:</span>
-                            <span id="res-climate" class="font-bold text-brand">+ 16 %</span>
-                        </div>
-                        <div class="flex justify-between items-center text-sm">
-                            <span class="text-white/60">Einkommensbonus:</span>
-                            <span id="res-income" class="font-bold text-brand">+ 0 %</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="border-t border-white/10 pt-6 mt-6">
-                    <p class="text-xs font-bold text-brand uppercase tracking-wider mb-2">Deine Konfiguration</p>
-                    <p id="res-description" class="text-xs text-white/70 leading-relaxed">
-                        Berechnung wird geladen...
-                    </p>
-                </div>
-            </section>
-
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
-            
-            <div id="trends" class="bg-white rounded-3xl p-6 md:p-8 shadow-soft border border-brand/5">
-                <span class="text-brand font-bold text-xs uppercase tracking-widest mb-1 block">Entwicklung über Zeit</span>
-                <h3 class="text-xl font-extrabold tracking-tight mb-4">Degression der Höchstgrenzen</h3>
-                <p class="text-dark/70 text-xs leading-relaxed mb-6">
-                    Die Reform senkt den maximal förderfähigen Betrag und den Klimageschwindigkeitsbonus schrittweise ab. Frühzeitiges Sanieren sichert die besten Zuschüsse.
-                </p>
-                <div class="h-48 w-full relative">
-                    <canvas id="costChart"></canvas>
-                </div>
-            </div>
-
-            <div class="bg-white rounded-3xl p-6 md:p-8 shadow-soft border border-brand/5 relative overflow-hidden flex flex-col justify-between">
+            <!-- MODULE 1: Heizungsrechner (ACTIVE LIVE MODULE) -->
+            <div class="md:col-span-7 bg-white rounded-3xl p-8 shadow-premium border border-brand/10 flex flex-col justify-between transform hover:scale-[1.01] transition-all duration-300 group">
                 <div>
-                    <span class="text-brand font-bold text-xs uppercase tracking-widest mb-1 block">Wichtigste Neuerung</span>
-                    <h3 class="text-xl font-extrabold tracking-tight mb-3">Neuer Spitzenfördersatz von 80%</h3>
-                    <p class="text-dark/70 text-xs leading-relaxed mb-4">
-                        Um einkommensschwächere Haushalte gezielter zu entlasten, wurde der maximale Gesamtförderdeckel von bisher 70% auf **80% angehoben**.
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-[10px] bg-emerald-500/10 text-emerald-600 font-extrabold px-3 py-1 rounded-full uppercase tracking-wider flex items-center gap-1.5">
+                            <span class="w-1.5 h-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Modul Aktiv
+                        </span>
+                        <span class="text-xs font-bold text-dark/30 uppercase tracking-widest">Reform 2026</span>
+                    </div>
+                    <h2 class="text-2xl md:text-3xl font-black tracking-tight text-dark mb-3 group-hover:text-brand transition-colors">
+                        Heizungsförderungs-Rechner
+                    </h2>
+                    <p class="text-dark/60 text-xs md:text-sm leading-relaxed mb-8">
+                        Simulieren Sie in Echtzeit die maximale staatliche KfW-Förderung (bis zu 80%) für Ihre neue Wärmepumpe unter Berücksichtigung von Haushaltseinkommen, Kinderfreibeträgen und gesetzlicher Degression.
                     </p>
                 </div>
-                <div class="p-4 bg-brandLight rounded-xl border border-brand/10">
-                    <p class="text-xs font-bold text-brand uppercase tracking-wider">Wer profitiert?</p>
-                    <p class="text-[11px] text-dark/80 mt-1">
-                        Selbstnutzende Eigentümer mit einem bereinigten Haushaltseinkommen von unter 30.000 Euro pro Jahr (rechnerisch bis zu 86% Förderung durch Baukastensystem, gedeckelt bei 80%).
+                <div>
+                    <a href="heizungsförderrechner.html" class="inline-flex w-full justify-center items-center bg-dark hover:bg-brand text-white font-bold text-sm py-4 px-6 rounded-2xl transition-all duration-200 gap-2 shadow-lg shadow-dark/10">
+                        Simulation starten 
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-4 h-4">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                    </a>
+                </div>
+            </div>
+
+            <!-- MODULE 2: Solar & Speicher (COMING SOON PREVIEW) -->
+            <div class="md:col-span-5 bg-white/60 rounded-3xl p-8 shadow-soft border border-brand/5 flex flex-col justify-between opacity-85">
+                <div>
+                    <div class="flex justify-between items-start mb-6">
+                        <span class="text-[10px] bg-brand/10 text-brand font-extrabold px-3 py-1 rounded-full uppercase tracking-wider">
+                            In Kürze Verfügbar
+                        </span>
+                    </div>
+                    <h3 class="text-xl font-extrabold tracking-tight text-dark mb-2">
+                        Solar & Stromspeicher Suite
+                    </h3>
+                    <p class="text-dark/60 text-xs leading-relaxed">
+                        Maßgeschneiderte Dimensionierung von PV-Anlagen und Heimspeichern basierend auf Ihrem Lastprofil. Inklusive Amortisations- und Autarkieberechnung.
                     </p>
+                </div>
+                <div class="mt-8 pt-4 border-t border-gray-100">
+                    <span class="text-[11px] font-semibold text-dark/40 flex items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-4 h-4 text-brand">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                        </svg>
+                        Nächstes geplantes Plattform-Update
+                    </span>
+                </div>
+            </div>
+
+            <!-- MODULE 3: Heartbeat & Tarife (FUTURE MODULE) -->
+            <div class="md:col-span-6 bg-white/60 rounded-3xl p-8 shadow-soft border border-brand/5 flex flex-col justify-between opacity-85">
+                <div>
+                    <span class="text-[10px] bg-brand/10 text-brand font-extrabold px-3 py-1 rounded-full uppercase tracking-wider mb-6 inline-block">
+                        Pipeline
+                    </span>
+                    <h3 class="text-xl font-extrabold tracking-tight text-dark mb-2">
+                        Heartbeat Energiemanagement
+                    </h3>
+                    <p class="text-dark/60 text-xs leading-relaxed">
+                        Visualisierung und Simulation der intelligenten Vernetzung über den Heartbeat-Energiemanager in Kombination mit dynamischen Stromtarifen.
+                    </p>
+                </div>
+            </div>
+
+            <!-- MODULE 4: Infobox für den Vertrieb (INFO CARD) -->
+            <div class="md:col-span-6 bg-dark text-white rounded-3xl p-8 shadow-xl flex flex-col justify-between">
+                <div>
+                    <span class="text-brand font-extrabold text-xs uppercase tracking-[0.2em] block mb-2">Vorteil für Kunden</span>
+                    <h3 class="text-xl font-black tracking-tight mb-3">Maximale Transparenz in der Beratung</h3>
+                    <p class="text-white/70 text-xs leading-relaxed">
+                        Alle Module sind auf dem neuesten gesetzlichen Stand des Jahres 2026. Nutzen Sie die Live-Berechnungen, um direkt im Gespräch verbindliche Werte zu ermitteln und Angebote datenbasiert zu untermauern.
+                    </p>
+                </div>
+                <div class="mt-6 flex items-center gap-2 text-xs text-brand font-bold uppercase tracking-wider">
+                    <span>1KOMMA5° Standard</span>
                 </div>
             </div>
 
         </div>
 
-        <section id="gmodg" class="pt-4">
-            <div class="bg-white rounded-3xl p-6 md:p-10 shadow-soft border border-brand/5 max-w-7xl mx-auto flex flex-col md:flex-row gap-8">
-                <div class="flex-1">
-                    <span class="text-brand font-bold text-xs uppercase tracking-widest mb-1 block">Die "Biotreppe" (GModG 2026)</span>
-                    <h3 class="text-2xl font-black mb-4">Einbaupflichten für grüne Gase im Bestand</h3>
-                    <p class="text-dark/70 text-sm leading-relaxed mb-6">
-                        Ab 2029 müssen Gasheizungen im Bestand schrittweise auf regenerative Energieträger (wie Biomethan oder Wasserstoff) umgestellt werden. Wer heute noch auf fossile Heizungen setzt, baut ein hohes Kostenrisiko.
-                    </p>
-                    <div class="space-y-3">
-                        <div class="p-3.5 bg-brandLight rounded-xl flex justify-between items-center border border-brand/10">
-                            <span class="font-bold text-xs">2029: Mindestens 15% EE-Anteil erforderlich</span>
-                            <div class="w-12 h-2 bg-brand rounded-full"></div>
-                        </div>
-                        <div class="p-3.5 bg-brandLight rounded-xl flex justify-between items-center border border-brand/10">
-                            <span class="font-bold text-xs">2035: Mindestens 30% EE-Anteil erforderlich</span>
-                            <div class="w-24 h-2 bg-brand rounded-full"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
     </main>
 
-    <footer class="py-16 text-center border-t border-brand/10 bg-white">
-        <p class="text-[10px] font-bold text-dark/40 uppercase tracking-[0.4em]">1KOMMA5° Reform Navigator 2026</p>
+    <!-- Footer -->
+    <footer class="py-16 text-center border-t border-brand/10 bg-white mt-24">
+        <p class="text-[10px] font-bold text-dark/40 uppercase tracking-[0.4em]">1KOMMA5° SalesHub • Alle Rechte vorbehalten • 2026</p>
     </footer>
 
-    <script>
-        // State variables
-        let currentStep = 0;
-        
-        const periods = ["2026", "Anfang 27", "Ende 27", "Anfang 28", "Ende 28", "Anfang 29", "Ende 29", "Anfang 30", "Ende 30", "2031"];
-        const costSteps = [28000, 27250, 26500, 25750, 25000, 24250, 23500, 22750, 22000, 22000];
-        const climateBonusSteps = [16, 12, 8, 4, 0, 0, 0, 0, 0, 0];
-
-        window.onload = function() {
-            initCharts();
-            
-            // Setup listeners for free inputs
-            document.getElementById('input-income').addEventListener('input', updateSimulation);
-            
-            // Period Range Input
-            document.getElementById('input-period').addEventListener('input', (e) => {
-                currentStep = parseInt(e.target.value);
-                document.getElementById('label-period').innerText = periods[currentStep];
-                updateSimulation();
-            });
-
-            // Initial calculation
-            updateSimulation();
-        };
-
-        function adjustIncome(amount) {
-            const input = document.getElementById('input-income');
-            let val = parseFloat(input.value) || 0;
-            val += amount;
-            if (val < 0) val = 0;
-            input.value = val;
-            updateSimulation();
-        }
-
-        function toggleCheckbox(id) {
-            const cb = document.getElementById(id);
-            cb.checked = !cb.checked;
-            
-            // Update toggle visual state
-            const targetSuffix = id === 'check-climate' ? 'climate' : 'kids';
-            const bg = document.getElementById('toggle-bg-' + targetSuffix);
-            const dot = document.getElementById('toggle-dot-' + targetSuffix);
-            
-            if (cb.checked) {
-                bg.classList.remove('bg-gray-200');
-                bg.classList.add('bg-brand');
-                dot.classList.add('translate-x-5');
-            } else {
-                bg.classList.remove('bg-brand');
-                bg.classList.add('bg-gray-200');
-                dot.classList.remove('translate-x-5');
-            }
-            updateSimulation();
-        }
-
-        function updateSimulation() {
-            const useClimate = document.getElementById('check-climate').checked;
-            const hasKids = document.getElementById('check-kids').checked;
-            
-            // Read free inputs
-            const incomeInput = document.getElementById('input-income');
-            let rawZvE = parseFloat(incomeInput.value) || 0;
-            if (rawZvE < 0) rawZvE = 0;
-            
-            // One-off 10,000 € deduction if child-toggle is active
-            const deduction = hasKids ? 10000 : 0;
-            let effectiveZvE = Math.max(0, rawZvE - deduction);
-
-            const baseCost = costSteps[currentStep];
-            let baseRate = 30;
-            let climateBonus = useClimate ? climateBonusSteps[currentStep] : 0;
-            let incomeBonus = 0;
-
-            // Apply income brackets
-            if (effectiveZvE <= 30000) {
-                incomeBonus = 40;
-            } else if (effectiveZvE <= 40000) {
-                incomeBonus = 30;
-            } else if (effectiveZvE <= 50000) {
-                incomeBonus = 10;
-            } else {
-                incomeBonus = 0;
-            }
-
-            let totalRate = baseRate + climateBonus + incomeBonus;
-            
-            // Calculate cap: 80% for low incomes, 70% for others
-            let cap = (effectiveZvE <= 30000) ? 80 : 70;
-            if (totalRate > cap) totalRate = cap;
-
-            const totalZuschuss = (baseCost * totalRate) / 100;
-
-            // Update UI elements
-            document.getElementById('res-total').innerText = totalZuschuss.toLocaleString('de-DE') + " €";
-            document.getElementById('res-basis').innerText = baseCost.toLocaleString('de-DE') + " €";
-            document.getElementById('res-climate').innerText = "+ " + climateBonus + " %";
-            document.getElementById('res-income').innerText = "+ " + incomeBonus + " %";
-            document.getElementById('res-rate').innerText = totalRate + "% Förderquote" + (totalRate === cap ? " (Gedeckelt)" : "");
-
-            // Generate customized explanation text
-            let childText = hasKids ? ` abzüglich des Kinderfreibetrags v. 10.000 €` : "";
-            let description = `Durch Ihr Haushaltseinkommen (${rawZvE.toLocaleString('de-DE')} €)${childText} liegt das bewertete Einkommen bei <strong>${effectiveZvE.toLocaleString('de-DE')} €</strong>. `;
-            
-            if (incomeBonus > 0) {
-                description += `Sie erhalten einen Einkommensbonus von +${incomeBonus}%. `;
-            } else {
-                description += "Es besteht kein Anspruch auf einen Einkommensbonus. ";
-            }
-            description += `Zusammen mit der Basisförderung und dem Klimabonus ergibt das eine Quote von <strong>${totalRate}%</strong> auf maximal ${baseCost.toLocaleString('de-DE')} € Kostenbasis.`;
-
-            document.getElementById('res-description').innerHTML = description;
-        }
-
-        function initCharts() {
-            const ctxCost = document.getElementById('costChart').getContext('2d');
-            new Chart(ctxCost, {
-                type: 'line',
-                data: {
-                    labels: periods,
-                    datasets: [{
-                        label: 'Max. Kostenbasis (€)',
-                        data: costSteps,
-                        borderColor: '#7d00ba',
-                        backgroundColor: 'rgba(125, 0, 186, 0.03)',
-                        borderWidth: 3,
-                        pointBackgroundColor: '#ffffff',
-                        pointBorderColor: '#7d00ba',
-                        pointBorderWidth: 2,
-                        pointRadius: 4,
-                        fill: true,
-                        tension: 0.2
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: { 
-                        legend: { display: false }
-                    },
-                    scales: { 
-                        y: { 
-                            min: 21000, max: 29000, 
-                            grid: { color: '#f3f4f6', drawBorder: false }, 
-                            ticks: { font: { size: 9, weight: '600' } } 
-                        },
-                        x: { 
-                            grid: { display: false }, 
-                            ticks: { font: { size: 9, weight: '600' } } 
-                        }
-                    }
-                }
-            });
-        }
-    </script>
 </body>
 </html>
