@@ -4,8 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>1KOMMA5° - Heizungsförderungs-Rechner by David Wrobel</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Inter Font -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
@@ -84,13 +87,15 @@
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-stretch">
 
+            <!-- LEFT SIMULATOR -->
             <section id="simulator" class="lg:col-span-7 bg-white rounded-3xl p-6 md:p-10 shadow-soft border border-brand/5 flex flex-col justify-between">
                 <div class="space-y-8">
                     <div class="flex items-center justify-between pb-4 border-b border-gray-100">
-                        <h2 class="text-2xl font-extrabold tracking-tight">Deine Heizungsförderung</h2>
+                        <h2 class="text-2xl font-extrabold tracking-tight">Dein Fördersimulator</h2>
                         <span class="text-xs font-bold text-brand uppercase tracking-wider bg-brandLight px-3 py-1 rounded-full">Individuelle Live-Berechnung</span>
                     </div>
 
+                    <!-- Sanierungszeitpunkt slider -->
                     <div>
                         <div class="flex justify-between items-center mb-3">
                             <label class="text-xs font-extrabold text-gray-500 uppercase tracking-wider">Antragsstellung</label>
@@ -107,23 +112,66 @@
                         </div>
                     </div>
 
+                    <!-- Wohneinheiten selection -->
+                    <div>
+                        <label class="text-xs font-extrabold text-gray-500 uppercase tracking-wider block mb-2">Wohneinheiten (WE)</label>
+                        <p class="text-xs text-dark/60 mb-3">
+                            Die Kostenbasis erhöht sich um <strong>15.000 €</strong> je weiterer Wohneinheit.
+                        </p>
+                        <div class="relative">
+                            <select id="select-units" class="block w-full rounded-2xl border border-gray-300 py-3.5 pl-5 pr-10 text-[#1c1c1c] font-bold text-lg focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent bg-white appearance-none cursor-pointer">
+                                <option value="1" selected>1 Wohneinheit (Einfamilienhaus)</option>
+                                <option value="2">2 Wohneinheiten (Zweifamilienhaus)</option>
+                                <option value="3">3 Wohneinheiten</option>
+                                <option value="4">4 Wohneinheiten</option>
+                                <option value="5">5 Wohneinheiten</option>
+                                <option value="6">6 Wohneinheiten</option>
+                            </select>
+                            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-5 text-gray-500">
+                                <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19 9l-7 7-7-7" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Investitionssumme input with stepper buttons -->
+                    <div>
+                        <label class="text-xs font-extrabold text-gray-500 uppercase tracking-wider block mb-2">Tatsächliche Investitionssumme</label>
+                        <p class="text-xs text-dark/60 mb-3">
+                            Geben Sie das Angebot bzw. die geschätzten Gesamtkosten Ihrer neuen Heizung ein.
+                        </p>
+                        <div class="flex items-center gap-2">
+                            <button type="button" onclick="adjustInvestment(-5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl shadow-sm transition-all select-none">-</button>
+                            <div class="relative flex-1">
+                                <input type="number" id="input-investment" value="30000" min="0" step="5000" class="block w-full rounded-2xl border border-gray-300 py-3 pl-5 pr-12 text-[#1c1c1c] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent font-semibold text-lg">
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-5">
+                                    <span class="text-gray-400 font-bold text-lg">€</span>
+                                </div>
+                            </div>
+                            <button type="button" onclick="adjustInvestment(5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl shadow-sm transition-all select-none">+</button>
+                        </div>
+                    </div>
+
+                    <!-- Household Income input with stepper buttons -->
                     <div>
                         <label class="text-xs font-extrabold text-gray-500 uppercase tracking-wider block mb-2">Haushaltseinkommen (zvE)</label>
                         <p class="text-xs text-dark/60 mb-3">
                             Geben Sie das zu versteuernde Jahreshaushaltseinkommen (zvE) Ihres Haushalts ein.
                         </p>
                         <div class="flex items-center gap-2">
-                            <button type="button" onclick="adjustIncome(-5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl">-</button>
+                            <button type="button" onclick="adjustIncome(-5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl shadow-sm transition-all select-none">-</button>
                             <div class="relative flex-1">
-                                <input type="number" id="input-income" value="70000" min="0" step="5000" class="block w-full rounded-2xl border border-gray-300 py-3 pl-5 pr-12 text-[#1c1c1c] placeholder-gray-400 focus:border-brand focus:ring-brand font-semibold text-lg">
+                                <input type="number" id="input-income" value="70000" min="0" step="5000" class="block w-full rounded-2xl border border-gray-300 py-3 pl-5 pr-12 text-[#1c1c1c] placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent font-semibold text-lg">
                                 <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-5">
                                     <span class="text-gray-400 font-bold text-lg">€</span>
                                 </div>
                             </div>
-                            <button type="button" onclick="adjustIncome(5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl">+</button>
+                            <button type="button" onclick="adjustIncome(5000)" class="w-12 h-12 flex items-center justify-center bg-brandLight hover:bg-brand/10 text-brand font-black rounded-2xl border border-brand/10 text-xl shadow-sm transition-all select-none">+</button>
                         </div>
                     </div>
 
+                    <!-- Kinderfreibetrag Toggle -->
                     <div class="flex items-center justify-between p-4 bg-brandLight rounded-2xl border border-brand/10 cursor-pointer select-none" onclick="toggleCheckbox('check-kids')">
                         <div class="flex-1 pr-4">
                             <span class="text-xs font-extrabold text-brand uppercase tracking-wider block mb-1">Kinderfreibetrag</span>
@@ -137,6 +185,7 @@
                         </div>
                     </div>
 
+                    <!-- Klimageschwindigkeitsbonus Toggle -->
                     <div class="flex items-center justify-between p-4 bg-brandLight rounded-2xl border border-brand/10 cursor-pointer select-none" onclick="toggleCheckbox('check-climate')">
                         <div class="flex-1 pr-4">
                             <span class="text-xs font-extrabold text-brand uppercase tracking-wider block mb-1">Klimageschwindigkeitsbonus</span>
@@ -152,6 +201,7 @@
                 </div>
             </section>
 
+            <!-- RIGHT LIVE RESULTS PANEL (WITH NET INVESTMENT / EIGENANTEIL ADDED) -->
             <section class="lg:col-span-5 bg-dark text-white rounded-3xl p-8 shadow-xl flex flex-col justify-between min-h-[500px]">
                 <div class="space-y-6">
                     <div>
@@ -160,14 +210,15 @@
                         <span id="res-rate" class="inline-block text-[11px] bg-brand text-white px-3 py-1 rounded-full font-bold uppercase tracking-wider mt-3">46% Förderquote</span>
                     </div>
 
+                    <!-- Grant breakdown and totals -->
                     <div class="border-t border-white/10 pt-6 space-y-4">
                         <div class="flex justify-between items-center text-sm">
-                            <span class="text-white/60">Förderfähige Kostenbasis:</span>
+                            <span class="text-white/60">Förderfähige Kostenbasis (Gesamt):</span>
                             <span id="res-basis" class="font-extrabold text-white text-base">28.000 €</span>
                         </div>
                         <div class="flex justify-between items-center text-sm">
-                            <span class="text-white/60">Basisförderung:</span>
-                            <span class="font-bold text-white">30 %</span>
+                            <span class="text-white/60">Basisförderung (30%):</span>
+                            <span id="res-basis-sum" class="font-bold text-white">8.400 €</span>
                         </div>
                         <div class="flex justify-between items-center text-sm">
                             <span class="text-white/60">Klimageschwindigkeitsbonus:</span>
@@ -176,6 +227,23 @@
                         <div class="flex justify-between items-center text-sm">
                             <span class="text-white/60">Einkommensbonus:</span>
                             <span id="res-income" class="font-bold text-brand">+ 0 %</span>
+                        </div>
+                    </div>
+
+                    <!-- Live Net Investment / Eigenanteil Section with wrap fix -->
+                    <div class="border-t border-white/10 pt-6 space-y-4">
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-white/60">Deine tatsächliche Investition:</span>
+                            <span id="res-inv-total" class="font-bold text-white">30.000 €</span>
+                        </div>
+                        <div class="flex justify-between items-center text-sm">
+                            <span class="text-white/60">Abzüglich Zuschuss:</span>
+                            <span id="res-inv-grant" class="font-bold text-brand">- 12.880 €</span>
+                        </div>
+                        <!-- Responsive container to prevent badge breaking -->
+                        <div class="flex flex-col sm:flex-row justify-between sm:items-center gap-2 text-base pt-3 border-t border-white/5 font-extrabold text-white">
+                            <span>Dein Eigenanteil nach Förderung:</span>
+                            <span id="res-net-investment" class="text-lg text-white font-black bg-brand/30 px-3 py-1 rounded-xl border border-brand/40 whitespace-nowrap inline-block">17.120&nbsp;€</span>
                         </div>
                     </div>
                 </div>
@@ -259,8 +327,10 @@
         window.onload = function() {
             initCharts();
             
-            // Setup listeners for free inputs
+            // Setup listeners for inputs
             document.getElementById('input-income').addEventListener('input', updateSimulation);
+            document.getElementById('input-investment').addEventListener('input', updateSimulation);
+            document.getElementById('select-units').addEventListener('change', updateSimulation);
             
             // Period Range Input
             document.getElementById('input-period').addEventListener('input', (e) => {
@@ -275,6 +345,15 @@
 
         function adjustIncome(amount) {
             const input = document.getElementById('input-income');
+            let val = parseFloat(input.value) || 0;
+            val += amount;
+            if (val < 0) val = 0;
+            input.value = val;
+            updateSimulation();
+        }
+
+        function adjustInvestment(amount) {
+            const input = document.getElementById('input-investment');
             let val = parseFloat(input.value) || 0;
             val += amount;
             if (val < 0) val = 0;
@@ -311,12 +390,32 @@
             const incomeInput = document.getElementById('input-income');
             let rawZvE = parseFloat(incomeInput.value) || 0;
             if (rawZvE < 0) rawZvE = 0;
+
+            const investmentInput = document.getElementById('input-investment');
+            let rawInvestment = parseFloat(investmentInput.value) || 0;
+            if (rawInvestment < 0) rawInvestment = 0;
+            
+            // Read housing units selection
+            const unitsSelect = document.getElementById('select-units');
+            let units = parseInt(unitsSelect.value) || 1;
             
             // One-off 10,000 € deduction if child-toggle is active
             const deduction = hasKids ? 10000 : 0;
             let effectiveZvE = Math.max(0, rawZvE - deduction);
 
+            // Cost calculation for multiple units (the legally capped amount)
             const baseCost = costSteps[currentStep];
+            const additionalCostBasis = (units - 1) * 15000;
+            const maxCappedCostBasis = baseCost + additionalCostBasis;
+
+            // The effective cost basis for calculation is either the actual investment,
+            // or the legally capped maximum, whichever is smaller.
+            const totalCostBasis = Math.min(rawInvestment, maxCappedCostBasis);
+
+            // How much of this cost basis corresponds to the first unit?
+            // The cost is split equally across all units.
+            const costBasisFirstUnit = totalCostBasis / units;
+
             let baseRate = 30;
             let climateBonus = useClimate ? climateBonusSteps[currentStep] : 0;
             let incomeBonus = 0;
@@ -332,31 +431,67 @@
                 incomeBonus = 0;
             }
 
-            let totalRate = baseRate + climateBonus + incomeBonus;
-            
-            // Calculate cap: 80% for low incomes, 70% for others
-            let cap = (effectiveZvE <= 30000) ? 80 : 70;
-            if (totalRate > cap) totalRate = cap;
+            // Calculations:
+            // 1. Basisförderung (30%) applies to the full cost basis (all units)
+            const basisZuschuss = (totalCostBasis * baseRate) / 100;
 
-            const totalZuschuss = (baseCost * totalRate) / 100;
+            // 2. Capped total rate on first unit (underlying limit 70% or 80%)
+            let totalRateFirstUnit = baseRate + climateBonus + incomeBonus;
+            let cap = (effectiveZvE <= 30000) ? 80 : 70;
+            if (totalRateFirstUnit > cap) totalRateFirstUnit = cap;
+
+            // 3. Other bonuses apply ONLY to the first unit's share of the costs
+            const bonusesRateFirstUnit = totalRateFirstUnit - baseRate; // e.g. 16% climate + 0% income = 16%
+            const bonusesZuschuss = (costBasisFirstUnit * bonusesRateFirstUnit) / 100;
+
+            // Total grant sum
+            const totalZuschuss = basisZuschuss + bonusesZuschuss;
+            
+            // Calculate effective average rate for display
+            const effectiveAverageRate = totalCostBasis > 0 ? Math.round((totalZuschuss / totalCostBasis) * 100) : 0;
+
+            // Net Investment (Own share of investment)
+            const netInvestment = Math.max(0, rawInvestment - totalZuschuss);
 
             // Update UI elements
             document.getElementById('res-total').innerText = totalZuschuss.toLocaleString('de-DE') + " €";
-            document.getElementById('res-basis').innerText = baseCost.toLocaleString('de-DE') + " €";
+            document.getElementById('res-basis').innerText = totalCostBasis.toLocaleString('de-DE') + " €";
+            document.getElementById('res-basis-sum').innerText = basisZuschuss.toLocaleString('de-DE') + " €";
             document.getElementById('res-climate').innerText = "+ " + climateBonus + " %";
             document.getElementById('res-income').innerText = "+ " + incomeBonus + " %";
-            document.getElementById('res-rate').innerText = totalRate + "% Förderquote" + (totalRate === cap ? " (Gedeckelt)" : "");
+            document.getElementById('res-rate').innerText = `~ ${effectiveAverageRate}% Mittlere Quote`;
+
+            // Net values
+            document.getElementById('res-inv-total').innerText = rawInvestment.toLocaleString('de-DE') + " €";
+            document.getElementById('res-inv-grant').innerText = "- " + totalZuschuss.toLocaleString('de-DE') + " €";
+            
+            // Using non-breaking space character to guarantee single-line rendering of currency
+            document.getElementById('res-net-investment').innerHTML = netInvestment.toLocaleString('de-DE') + "&nbsp;€";
 
             // Generate customized explanation text
             let childText = hasKids ? ` abzüglich des Kinderfreibetrags v. 10.000 €` : "";
-            let description = `Durch Ihr Haushaltseinkommen (${rawZvE.toLocaleString('de-DE')} €)${childText} liegt das bewertete Einkommen bei <strong>${effectiveZvE.toLocaleString('de-DE')} €</strong>. `;
+            let unitsText = units > 1 
+                ? ` für <strong>${units} Wohneinheiten</strong>.`
+                : " für eine Wohneinheit.";
+                
+            let limitNotice = rawInvestment > maxCappedCostBasis 
+                ? ` (Ihre Investition übersteigt die gesetzliche Höchstgrenze von ${maxCappedCostBasis.toLocaleString('de-DE')} €)`
+                : "";
+
+            let description = `Durch Ihr Haushaltseinkommen (${rawZvE.toLocaleString('de-DE')} €)${childText} liegt das bewertete Einkommen bei <strong>${effectiveZvE.toLocaleString('de-DE')} €</strong>${unitsText}${limitNotice}<br class="mb-2 block">`;
             
-            if (incomeBonus > 0) {
-                description += `Sie erhalten einen Einkommensbonus von +${incomeBonus}%. `;
+            description += `Die <strong>Basisförderung (30%)</strong> gilt für alle Wohneinheiten auf die förderfähige Kostenbasis von <strong>${totalCostBasis.toLocaleString('de-DE')} €</strong> (= ${basisZuschuss.toLocaleString('de-DE')} €). `;
+            
+            if (units > 1) {
+                description += `Zusatzboni (Klimabonus: +${climateBonus}%, Einkommensbonus: +${incomeBonus}%) werden gesetzlich <strong>nur anteilig für die erste Wohneinheit</strong> (Anteil: ${costBasisFirstUnit.toLocaleString('de-DE')} €) gewährt (Wert: ${bonusesZuschuss.toLocaleString('de-DE')} €).`;
             } else {
-                description += "Es besteht kein Anspruch auf einen Einkommensbonus. ";
+                if (incomeBonus > 0) {
+                    description += `Sie erhalten einen Einkommensbonus von +${incomeBonus}%. `;
+                } else {
+                    description += "Es besteht kein Anspruch auf einen Einkommensbonus. ";
+                }
+                description += `Zusammen mit der Basisförderung und dem Klimabonus ergibt das eine Quote von <strong>${totalRateFirstUnit}%</strong> auf die Kostenbasis von ${totalCostBasis.toLocaleString('de-DE')} €.`;
             }
-            description += `Zusammen mit der Basisförderung und dem Klimabonus ergibt das eine Quote von <strong>${totalRate}%</strong> auf maximal ${baseCost.toLocaleString('de-DE')} € Kostenbasis.`;
 
             document.getElementById('res-description').innerHTML = description;
         }
