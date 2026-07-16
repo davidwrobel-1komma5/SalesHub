@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Autarkiegrad und Eigenverbrauch einer Photovoltaikanlage mit Stromspeicher abschätzen.">
+  <title>Unabhängigkeit berechnen | 1KOMMA5°</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body data-page="independence-calculator">
+  <main class="content" id="main-content" tabindex="-1">
+    <div class="content-inner">
+      <header class="page-header">
+        <p class="eyebrow">Solar & Speicher</p>
+        <h1>Wie unabhängig kann Ihr Zuhause werden?</h1>
+        <p>Sehen Sie, welchen Anteil Ihres Strombedarfs eine Photovoltaikanlage mit Batteriespeicher voraussichtlich abdecken kann.</p>
+      </header>
+
+      <section class="grid independence-grid" aria-label="Unabhängigkeit berechnen">
+        <form class="card" id="independence-form" novalidate>
+          <div class="section-heading"><p class="eyebrow">Ihre Angaben</p><h2>Drei Werte genügen</h2></div>
+          <div class="parameter-list">
+            <div class="parameter">
+              <div class="parameter__head"><label for="consumption">Jahresstromverbrauch</label><div class="parameter__value"><input class="input" id="consumption" type="number" min="1000" max="20000" step="100" value="6000"><span class="parameter__unit">kWh</span></div></div>
+              <input id="consumption-range" type="range" min="1000" max="20000" step="100" value="6000" aria-label="Jahresstromverbrauch einstellen">
+              <div class="parameter__scale" aria-hidden="true"><span>1.000 kWh</span><span>20.000 kWh</span></div>
+            </div>
+            <div class="parameter">
+              <div class="parameter__head"><label for="pv-power">Photovoltaikleistung</label><div class="parameter__value"><input class="input" id="pv-power" type="number" min="1" max="30" step="0.1" value="10"><span class="parameter__unit">kWp</span></div></div>
+              <input id="pv-power-range" type="range" min="1" max="30" step="0.1" value="10" aria-label="Photovoltaikleistung einstellen">
+              <div class="parameter__scale" aria-hidden="true"><span>1 kWp</span><span>30 kWp</span></div>
+            </div>
+            <div class="parameter">
+              <div class="parameter__head"><label for="storage">Nutzbare Speicherkapazität</label><div class="parameter__value"><input class="input" id="storage" type="number" min="0" max="30" step="0.1" value="6"><span class="parameter__unit">kWh</span></div></div>
+              <input id="storage-range" type="range" min="0" max="30" step="0.1" value="6" aria-label="Speicherkapazität einstellen">
+              <div class="parameter__scale" aria-hidden="true"><span>Ohne Speicher</span><span>30 kWh</span></div>
+            </div>
+          </div>
+          <div class="notice" style="margin-top:28px">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg>
+            <div><strong>Orientierungswert</strong><p>Der Autarkiegrad wird direkt aus der bereitgestellten HTW-Kennwertmatrix interpoliert. Eigenverbrauch und Energieflüsse werden daraus mit 950 kWh Ertrag je kWp abgeleitet.</p></div>
+          </div>
+        </form>
+
+        <div class="energy-dashboard" aria-live="polite">
+          <aside class="card card--dark result-panel independence-result" aria-labelledby="autarky-heading">
+            <span class="result-kicker">Voraussichtlicher Autarkiegrad</span>
+            <h2 class="result-total" id="autarky-heading"><span id="autarky-value">62 %</span></h2>
+            <p>des jährlichen Strombedarfs aus PV und Speicher</p>
+            <div class="result-list">
+              <div class="result-row"><span>Eigenverbrauchsanteil</span><strong id="self-use-value">39 %</strong></div>
+              <div class="result-row"><span>Jahresstromverbrauch</span><strong id="home-demand">6.000 kWh</strong></div>
+              <div class="result-row"><span>PV & Speicher</span><strong id="system-config">10,0 kWp · 6,0 kWh</strong></div>
+              <div class="result-row"><span>Solarerzeugung</span><strong id="metric-generation">9.500 kWh</strong></div>
+              <div class="result-row"><span>Davon selbst genutzt</span><strong id="metric-self">3.693 kWh</strong></div>
+              <div class="result-row"><span>Netzbezug</span><strong id="metric-grid">2.307 kWh</strong></div>
+              <div class="result-row result-row--total"><span>Einspeisung</span><strong id="metric-feed">5.807 kWh</strong></div>
+            </div>
+          </aside>
+
+          <section class="card card--quiet energy-balance" aria-labelledby="balance-heading">
+            <div class="section-heading"><p class="eyebrow">Energieaufteilung</p><h2 id="balance-heading">Woher kommt der Strom?</h2></div>
+            <div class="balance-row">
+              <div class="balance-row__head"><strong>Ihr Stromverbrauch</strong><span id="consumption-total">6.000 kWh</span></div>
+              <div class="balance-bar" id="consumption-bar"><span class="balance-bar__own balance-segment" id="consumption-own" style="width:62%" tabindex="0" data-tooltip="PV & Speicher: 3.693 kWh · 62 %" aria-label="PV und Speicher: 3.693 Kilowattstunden, 62 Prozent"></span><span class="balance-bar__grid balance-segment" id="consumption-grid" style="width:38%" tabindex="0" data-tooltip="Stromnetz: 2.307 kWh · 38 %" aria-label="Stromnetz: 2.307 Kilowattstunden, 38 Prozent"></span></div>
+              <div class="balance-legend"><span><i class="balance-dot balance-dot--own"></i>PV & Speicher</span><span><i class="balance-dot balance-dot--grid"></i>Stromnetz</span></div>
+            </div>
+            <div class="balance-row">
+              <div class="balance-row__head"><strong>Ihr Solarstrom</strong><span id="generation-total">9.500 kWh</span></div>
+              <div class="balance-bar"><span class="balance-bar__own balance-segment" id="generation-own" style="width:39%" tabindex="0" data-tooltip="Selbst genutzt: 3.693 kWh · 39 %" aria-label="Selbst genutzt: 3.693 Kilowattstunden, 39 Prozent"></span><span class="balance-bar__feed balance-segment" id="generation-feed" style="width:61%" tabindex="0" data-tooltip="Eingespeist: 5.807 kWh · 61 %" aria-label="Eingespeist: 5.807 Kilowattstunden, 61 Prozent"></span></div>
+              <div class="balance-legend"><span><i class="balance-dot balance-dot--own"></i>Selbst genutzt</span><span><i class="balance-dot balance-dot--feed"></i>Eingespeist</span></div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="section card card--quiet" aria-labelledby="meaning-heading">
+        <div class="section-heading"><p class="eyebrow">Einfach erklärt</p><h2 id="meaning-heading">Zwei Kennzahlen, zwei Blickwinkel</h2></div>
+        <div class="grid grid--2">
+          <div><h3>Autarkiegrad</h3><p>Wie viel Ihres gesamten Strombedarfs decken Sie mit selbst erzeugtem und gespeichertem Solarstrom?</p></div>
+          <div><h3>Eigenverbrauchsanteil</h3><p>Wie viel des erzeugten Solarstroms verbrauchen Sie selbst, statt ihn in das öffentliche Netz einzuspeisen?</p></div>
+        </div>
+      </section>
+
+      <footer class="footer">Berechnung in Anlehnung an die Systematik des <a href="https://solar.htw-berlin.de/rechner/unabhaengigkeitsrechner/" target="_blank" rel="noreferrer">Unabhängigkeitsrechners der HTW Berlin</a>. Keine Ertragsgarantie oder Anlagenplanung.</footer>
+    </div>
+  </main>
+
+  <script src="assets/autarky-matrix.js"></script>
+  <script>
+    (() => {
+      const fields = [
+        { input: 'consumption', range: 'consumption-range' },
+        { input: 'pv-power', range: 'pv-power-range' },
+        { input: 'storage', range: 'storage-range' }
+      ];
+      const numberDE = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
+      const decimalDE = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+      const setText = (id, value) => { document.getElementById(id).textContent = value; };
+      const setTooltip = (id, label, value, percent) => {
+        const element = document.getElementById(id);
+        element.dataset.tooltip = `${label}: ${numberDE.format(value)} kWh · ${percent} %`;
+        element.setAttribute('aria-label', `${label}: ${numberDE.format(value)} Kilowattstunden, ${percent} Prozent`);
+      };
+      const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
+      const interpolateAutarky = (pvRatio, batteryRatio) => {
+        const matrix = window.AUTARKY_MATRIX;
+        const step = 0.0625;
+        const maxIndex = 160;
+        const x = clamp(Math.round(pvRatio * 10000) / 10000, 0, maxIndex * step);
+        const y = clamp(Math.round(batteryRatio * 10000) / 10000, 0, maxIndex * step);
+        const x0 = Math.min(Math.floor(x / step), maxIndex);
+        const y0 = Math.min(Math.floor(y / step), maxIndex);
+        const x1 = Math.min(x0 + 1, maxIndex);
+        const y1 = Math.min(y0 + 1, maxIndex);
+        const tx = x1 === x0 ? 0 : (x - x0 * step) / step;
+        const ty = y1 === y0 ? 0 : (y - y0 * step) / step;
+        const top = matrix[y0 + 1][x0 + 1] + tx * (matrix[y0 + 1][x1 + 1] - matrix[y0 + 1][x0 + 1]);
+        const bottom = matrix[y1 + 1][x0 + 1] + tx * (matrix[y1 + 1][x1 + 1] - matrix[y1 + 1][x0 + 1]);
+        return top + ty * (bottom - top);
+      };
+
+      const calculate = () => {
+        const consumption = clamp(Number(document.getElementById('consumption').value) || 0, 1000, 20000);
+        const pvPower = clamp(Number(document.getElementById('pv-power').value) || 0, 1, 30);
+        const storage = clamp(Number(document.getElementById('storage').value) || 0, 0, 30);
+        const specificYield = 950;
+        const pvYield = pvPower * specificYield;
+        const pvRatio = pvPower / consumption * 1000;
+        const batteryRatio = storage / consumption * 1000;
+        const autarky = clamp(interpolateAutarky(pvRatio, batteryRatio), 0, 1);
+        const selfConsumed = Math.min(consumption * autarky, pvYield);
+        const selfUse = pvYield > 0 ? selfConsumed / pvYield : 0;
+        const gridImport = Math.max(consumption - selfConsumed, 0);
+        const feedIn = Math.max(pvYield - selfConsumed, 0);
+        const autarkyPercent = Math.round(autarky * 100);
+        const selfUsePercent = Math.round(selfUse * 100);
+
+        setText('autarky-value', `${autarkyPercent} %`);
+        setText('self-use-value', `${selfUsePercent} %`);
+        setText('home-demand', `${numberDE.format(consumption)} kWh`);
+        setText('system-config', `${decimalDE.format(pvPower)} kWp · ${decimalDE.format(storage)} kWh`);
+        setText('metric-generation', `${numberDE.format(pvYield)} kWh`);
+        setText('metric-self', `${numberDE.format(selfConsumed)} kWh`);
+        setText('metric-grid', `${numberDE.format(gridImport)} kWh`);
+        setText('metric-feed', `${numberDE.format(feedIn)} kWh`);
+        setText('consumption-total', `${numberDE.format(consumption)} kWh`);
+        setText('generation-total', `${numberDE.format(pvYield)} kWh`);
+        document.getElementById('consumption-own').style.width = `${autarkyPercent}%`;
+        document.getElementById('consumption-grid').style.width = `${100 - autarkyPercent}%`;
+        document.getElementById('generation-own').style.width = `${selfUsePercent}%`;
+        document.getElementById('generation-feed').style.width = `${100 - selfUsePercent}%`;
+        setTooltip('consumption-own', 'PV & Speicher', selfConsumed, autarkyPercent);
+        setTooltip('consumption-grid', 'Stromnetz', gridImport, 100 - autarkyPercent);
+        setTooltip('generation-own', 'Selbst genutzt', selfConsumed, selfUsePercent);
+        setTooltip('generation-feed', 'Eingespeist', feedIn, 100 - selfUsePercent);
+      };
+
+      fields.forEach(({ input, range }) => {
+        const numberInput = document.getElementById(input);
+        const rangeInput = document.getElementById(range);
+        numberInput.addEventListener('input', () => { rangeInput.value = numberInput.value; calculate(); });
+        rangeInput.addEventListener('input', () => { numberInput.value = rangeInput.value; calculate(); });
+      });
+      calculate();
+    })();
+  </script>
+</body>
+</html>

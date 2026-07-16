@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Finanzierungsrechner für den 1KOMMA5° Ratenkauf mit 6,16 Prozent effektivem Jahreszins.">
+  <title>Finanzierung berechnen | 1KOMMA5°</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script src="assets/app.js" defer></script>
+</head>
+<body data-page="financing-calculator">
+  <main class="content" id="main-content" tabindex="-1">
+    <div class="content-inner">
+      <header class="page-header">
+        <p class="eyebrow">Ratenkauf</p>
+        <h1>Finanzierung einfach einordnen.</h1>
+        <p>Berechne eine unverbindliche monatliche Rate für eine Laufzeit zwischen 5 und 25 Jahren.</p>
+        <div class="status-row">
+          <span class="badge badge--success"><span class="badge-dot"></span>Flexible Sondertilgung</span>
+          <span class="badge">Laufzeit 5–25 Jahre</span>
+        </div>
+      </header>
+
+      <section class="grid calculator-grid" aria-label="Finanzierung berechnen">
+        <form class="card" id="financing-form" novalidate>
+          <div class="form-section">
+            <p class="eyebrow">Finanzierungsdaten</p>
+            <h2>Was soll finanziert werden?</h2>
+
+            <div class="field">
+              <label for="finance-amount">Finanzierungsbetrag</label>
+              <p class="field-hint" id="amount-hint">Gesamter Betrag, der über den Ratenkauf finanziert wird.</p>
+              <div class="finance-input-wrap">
+                <input class="input finance-input" id="finance-amount" name="finance-amount" type="number" inputmode="decimal" min="1000" max="250000" step="500" value="25000" aria-describedby="amount-hint amount-error">
+                <span aria-hidden="true">€</span>
+              </div>
+              <p class="field-error" id="amount-error" role="alert"></p>
+            </div>
+
+            <div class="field">
+              <div class="range-head">
+                <label for="finance-term">Laufzeit</label>
+                <output class="range-value" id="term-output" for="finance-term">15 Jahre</output>
+              </div>
+              <input id="finance-term" name="finance-term" type="range" min="5" max="25" step="1" value="15" aria-describedby="term-hint">
+              <div class="range-labels" aria-hidden="true"><span>5 Jahre</span><span>25 Jahre</span></div>
+              <p class="field-hint" id="term-hint">Die Laufzeit kann in ganzen Jahren gewählt werden.</p>
+            </div>
+          </div>
+
+          <details class="form-section optional-section">
+            <summary class="optional-section__summary">
+              <span><span class="eyebrow">Optional</span><strong>Sondertilgung einplanen</strong></span>
+              <span class="optional-section__icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></span>
+            </summary>
+            <div class="optional-section__content">
+
+            <div class="field">
+              <label for="special-payment">Einmalige Sondertilgung</label>
+              <p class="field-hint" id="special-payment-hint">Die Monatsrate bleibt gleich. Die Sondertilgung verkürzt ausschließlich die Laufzeit.</p>
+              <div class="finance-input-wrap">
+                <input class="input finance-input" id="special-payment" name="special-payment" type="number" inputmode="decimal" min="0" max="250000" step="500" value="0" aria-describedby="special-payment-hint special-payment-error">
+                <span aria-hidden="true">€</span>
+              </div>
+              <p class="field-error" id="special-payment-error" role="alert"></p>
+            </div>
+
+            <div class="field">
+              <div class="range-head">
+                <label for="special-year">Zeitpunkt der Sondertilgung</label>
+                <output class="range-value" id="special-year-output" for="special-year">Nach 5 Jahren</output>
+              </div>
+              <input id="special-year" name="special-year" type="range" min="1" max="14" step="1" value="5" aria-describedby="special-year-hint" disabled>
+              <div class="range-labels" aria-hidden="true"><span>Nach 1 Jahr</span><span id="special-year-max">Nach 14 Jahren</span></div>
+              <p class="field-hint" id="special-year-hint">Der Zeitpunkt wird aktiv, sobald eine Sondertilgung eingetragen ist.</p>
+            </div>
+            </div>
+          </details>
+
+          <div class="form-section">
+            <div class="notice">
+              <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg>
+              <div><strong>Unverbindliche Modellrechnung</strong><p>Die Monatsrate bleibt auch nach der einmaligen Sondertilgung unverändert. Vertragsgebühren und weitere Zahlungen werden nicht berücksichtigt.</p></div>
+            </div>
+          </div>
+        </form>
+
+        <aside class="card card--dark result-panel" aria-labelledby="result-heading" aria-live="polite">
+          <span class="result-kicker">Voraussichtliche Monatsrate</span>
+          <h2 class="result-total" id="result-heading"><span id="monthly-rate">–</span></h2>
+          <p>bei gleichbleibender Rate</p>
+          <div class="result-list">
+            <div class="result-row"><span>Finanzierungsbetrag</span><strong id="result-amount">–</strong></div>
+            <div class="result-row"><span>Ursprüngliche Laufzeit</span><strong id="result-original-term">–</strong></div>
+            <div class="result-row"><span>Sondertilgung</span><strong id="result-special-payment">–</strong></div>
+            <div class="result-row result-row--total"><span>Neue Laufzeit</span><strong id="result-new-term">–</strong></div>
+            <div class="result-row"><span>Laufzeit reduziert um</span><strong id="result-time-saved">–</strong></div>
+          </div>
+          <p class="result-explanation" id="result-note">Die finale Rate kann durch Vertragsdetails und Rundungen abweichen.</p>
+        </aside>
+      </section>
+
+      <section class="section card card--quiet" aria-labelledby="calculation-heading">
+        <div class="section-heading">
+          <p class="eyebrow">Berechnungsgrundlage</p>
+          <h2 id="calculation-heading">So wirkt die Sondertilgung.</h2>
+          <p>Die Monatsrate wird zunächst für die gewählte reguläre Laufzeit berechnet. Die Sondertilgung senkt später die verbleibende Restschuld; anschließend läuft die Finanzierung mit derselben Monatsrate weiter.</p>
+        </div>
+        <table class="assumption-table">
+          <thead><tr><th>Größe</th><th>Annahme</th></tr></thead>
+          <tbody>
+            <tr><td>Rückzahlung</td><td>Monatlich, gleichbleibende Rate</td></tr>
+            <tr><td>Zusatzkosten</td><td>Nicht berücksichtigt</td></tr>
+            <tr><td>Sondertilgung</td><td>Einmalig zum gewählten Zeitpunkt</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <footer class="footer">Unverbindliche Beispielrechnung und kein Kreditangebot. Maßgeblich sind die Konditionen und Pflichtangaben des jeweiligen Finanzierungsvertrags.</footer>
+    </div>
+  </main>
+
+  <script>
+    (() => {
+      const EFFECTIVE_ANNUAL_RATE = 0.0616;
+      const amountInput = document.querySelector('#finance-amount');
+      const termInput = document.querySelector('#finance-term');
+      const termOutput = document.querySelector('#term-output');
+      const amountError = document.querySelector('#amount-error');
+      const specialPaymentInput = document.querySelector('#special-payment');
+      const specialPaymentError = document.querySelector('#special-payment-error');
+      const specialYearInput = document.querySelector('#special-year');
+      const specialYearOutput = document.querySelector('#special-year-output');
+      const specialYearMax = document.querySelector('#special-year-max');
+      const euro = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      const wholeEuro = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0 });
+
+      const setText = (selector, value) => {
+        document.querySelector(selector).textContent = value;
+      };
+
+      const formatDuration = (months) => {
+        const years = Math.floor(months / 12);
+        const remainingMonths = months % 12;
+        const parts = [];
+        if (years) parts.push(`${years} ${years === 1 ? 'Jahr' : 'Jahre'}`);
+        if (remainingMonths) parts.push(`${remainingMonths} ${remainingMonths === 1 ? 'Monat' : 'Monate'}`);
+        return parts.join(' und ') || '0 Monate';
+      };
+
+      const calculate = () => {
+        const amount = Number(amountInput.value);
+        const years = Number(termInput.value);
+        const months = years * 12;
+        const specialPayment = Number(specialPaymentInput.value || 0);
+        const maximumSpecialYear = Math.max(1, years - 1);
+        specialYearInput.max = String(maximumSpecialYear);
+        if (Number(specialYearInput.value) > maximumSpecialYear) specialYearInput.value = String(maximumSpecialYear);
+        const specialYear = Number(specialYearInput.value);
+        const monthlyRate = Math.pow(1 + EFFECTIVE_ANNUAL_RATE, 1 / 12) - 1;
+        const validAmount = Number.isFinite(amount) && amount >= 1000 && amount <= 250000;
+        const validSpecialPayment = Number.isFinite(specialPayment) && specialPayment >= 0 && (!validAmount || specialPayment <= amount);
+        const hasSpecialPayment = validSpecialPayment && specialPayment > 0;
+
+        termOutput.value = `${years} Jahre`;
+        termOutput.textContent = `${years} Jahre`;
+        specialYearInput.disabled = !hasSpecialPayment;
+        specialYearOutput.value = `Nach ${specialYear} ${specialYear === 1 ? 'Jahr' : 'Jahren'}`;
+        specialYearOutput.textContent = specialYearOutput.value;
+        specialYearMax.textContent = `Nach ${maximumSpecialYear} ${maximumSpecialYear === 1 ? 'Jahr' : 'Jahren'}`;
+        setText('#result-original-term', formatDuration(months));
+
+        amountInput.setAttribute('aria-invalid', String(!validAmount));
+        amountError.textContent = validAmount ? '' : 'Bitte einen Finanzierungsbetrag zwischen 1.000 € und 250.000 € eingeben.';
+        specialPaymentInput.setAttribute('aria-invalid', String(!validSpecialPayment));
+        specialPaymentError.textContent = validSpecialPayment ? '' : 'Die Sondertilgung darf den Finanzierungsbetrag nicht überschreiten.';
+
+        if (!validAmount || !validSpecialPayment) {
+          ['#monthly-rate', '#result-amount', '#result-special-payment', '#result-new-term', '#result-time-saved'].forEach((selector) => setText(selector, '–'));
+          return;
+        }
+
+        const payment = amount * monthlyRate / (1 - Math.pow(1 + monthlyRate, -months));
+        const specialPaymentMonth = specialYear * 12;
+        let balance = amount;
+        let paidMonths = months;
+
+        for (let month = 1; month <= months; month += 1) {
+          balance += balance * monthlyRate;
+          balance -= payment;
+          if (hasSpecialPayment && month === specialPaymentMonth) balance -= Math.min(specialPayment, Math.max(0, balance));
+          if (balance <= 0.01) {
+            paidMonths = month;
+            break;
+          }
+        }
+
+        setText('#monthly-rate', euro.format(payment));
+        setText('#result-amount', wholeEuro.format(amount));
+        setText('#result-special-payment', hasSpecialPayment ? `${wholeEuro.format(specialPayment)} nach ${specialYear} ${specialYear === 1 ? 'Jahr' : 'Jahren'}` : 'Keine');
+        setText('#result-new-term', formatDuration(paidMonths));
+        setText('#result-time-saved', formatDuration(months - paidMonths));
+      };
+
+      amountInput.addEventListener('input', calculate);
+      amountInput.addEventListener('blur', calculate);
+      termInput.addEventListener('input', calculate);
+      specialPaymentInput.addEventListener('input', calculate);
+      specialPaymentInput.addEventListener('blur', calculate);
+      specialYearInput.addEventListener('input', calculate);
+      calculate();
+    })();
+  </script>
+</body>
+</html>
