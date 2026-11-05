@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Wirtschaftlichkeitsvergleich für Photovoltaik, Wärmepumpe und Komplettsystem von 1KOMMA5°.">
+<title>Wirtschaftlichkeitsrechner | 1KOMMA5°</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/styles.css?v=20261020-brand">
+<script src="assets/app.js?v=20261020-brand" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+  /* Rechner-Tokens auf den Wrapper begrenzt und auf die Markenpalette aus styles.css
+     gelegt – auf :root würden sie die Portal-Navigation mitfärben. */
+  .wr{
+    --aub:var(--color-aubergine); --aub-dark:var(--color-aubergine-dark); --aub-50:var(--color-aubergine-50);
+    --aub-25:var(--color-aubergine-25); --aub-10:var(--color-aubergine-10);
+    --mint-10:var(--color-mint-10);
+    --ink-75:var(--color-graphite-75); --ink-50:var(--color-graphite-75); /* Graphite 50 % erreicht auf Weiß kein AA */ --ink-25:var(--color-graphite-25);
+    --bg:var(--canvas); --card:var(--surface);
+    --r:14px; --r-sm:10px;
+  }
+  /* Hintergrund und Grundschrift kommen aus dem Portal. */
+  .wr{font-size:15px;line-height:1.45;-webkit-text-size-adjust:100%}
+  .wr h1,.wr h2,.wr h3,.wr .num{font-family:var(--font-primary)}
+  .wr .num{font-variant-numeric:tabular-nums}
+  .wr button{font:inherit;cursor:pointer}
+
+  /* Kopfzeile */
+  .top{position:sticky;top:0;z-index:20;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+  .top-in{max-width:1320px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .brand{display:flex;align-items:center;gap:12px;margin-right:auto}
+  .brand img{height:30px;width:auto}
+  .brand h1{font-size:1.15rem;font-weight:700;margin:0;letter-spacing:-0.01em}
+  .seg{display:inline-flex;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;gap:2px}
+  .seg button{border:0;background:transparent;color:var(--ink-75);font-weight:600;padding:8px 16px;border-radius:9px;white-space:nowrap}
+  .seg button[aria-selected="true"]{background:var(--aub);color:#fff}
+  .seg button:not([aria-selected="true"]):hover{background:#fff;color:var(--ink)}
+  .seg .short{display:none}
+  .live{display:flex;align-items:baseline;gap:8px;font-size:.85rem;color:var(--ink-75)}
+  .live b{font-family:var(--font-primary);font-size:1.25rem;color:var(--aub)}
+  .live b.neg{color:var(--ink)}
+  .actions{display:flex;gap:8px}
+  .btn{border:1px solid var(--line);background:#fff;color:var(--ink);font-weight:600;font-size:.85rem;padding:8px 14px;border-radius:9px}
+  .btn:hover{border-color:var(--aub-25);background:var(--aub-10)}
+  .btn.primary{background:var(--ink);border-color:var(--ink);color:#fff}
+  .btn.primary:hover{background:#000}
+
+  /* Layout */
+  .wrap{max-width:1320px;margin:0 auto;padding:24px;display:grid;grid-template-columns:minmax(360px,440px) 1fr;gap:24px;align-items:start}
+  .col{display:grid;gap:16px;min-width:0}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+  .card-h{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .card-h h2{font-size:1.05rem;font-weight:600;margin:0}
+  .step{flex:0 0 26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:.8rem;font-weight:700;background:var(--bg);color:var(--ink-75)}
+  .card.one{border-color:var(--aub-25);box-shadow:inset 4px 0 0 var(--aub)}
+  .card.one .step{background:var(--aub);color:#fff}
+
+  /* Felder */
+  .grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+  .f{min-width:0}
+  .f.full{grid-column:1/-1}
+  .f label{display:block;font-size:.8rem;font-weight:600;color:var(--ink-75);margin-bottom:5px}
+  .in{display:flex;align-items:center;height:42px;border:1px solid var(--color-graphite-25);border-radius:var(--r-sm);background:#fff;overflow:hidden}
+  .in:focus-within{border-color:var(--aub);box-shadow:var(--focus)}
+  .in input,.in select{flex:1;min-width:0;width:100%;height:100%;border:0;background:transparent;color:var(--ink);font:500 .95rem var(--font-digital);padding:0 10px 0 12px;font-variant-numeric:tabular-nums;outline:none}
+  .in select{appearance:auto}
+  .in .u{flex:0 0 auto;padding-right:11px;font-size:.75rem;color:var(--ink-50);white-space:nowrap}
+  .hint{font-size:.74rem;color:var(--ink-50);margin-top:4px;line-height:1.3}
+  .chk{grid-column:1/-1;display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:var(--r-sm);cursor:pointer;font-size:.9rem;font-weight:600}
+  .chk:hover{background:var(--aub-10);border-color:var(--aub-25)}
+  .chk input{width:18px;height:18px;accent-color:var(--aub);margin:0}
+  .chk .hint{font-weight:400;margin:2px 0 0}
+  .rec{font-size:.76rem;color:var(--ink-75);margin-top:4px}
+  .rec button{border:0;background:none;color:var(--aub);font-weight:600;padding:0;font-size:.76rem;text-decoration:underline;text-underline-offset:2px}
+  [hidden]{display:none!important}
+
+  details.more{margin-top:14px;border-top:1px dashed var(--line);padding-top:10px}
+  details.more summary{cursor:pointer;font-size:.82rem;font-weight:600;color:var(--aub);list-style:none;display:flex;align-items:center;gap:6px}
+  details.more summary::-webkit-details-marker{display:none}
+  details.more summary::before{content:"+";display:inline-grid;place-items:center;width:18px;height:18px;border-radius:5px;background:var(--aub-10);font-weight:700}
+  details.more[open] summary::before{content:"–"}
+  details.more .grid{margin-top:12px}
+
+  /* Ergebnis */
+  .verdict{background:linear-gradient(135deg,var(--aub),var(--aub-dark));color:#fff;border:0;padding:26px 28px}
+  .verdict .eyebrow{font-size:.78rem;font-weight:600;letter-spacing:0.01em;text-transform:uppercase;opacity:.75}
+  .verdict .big{font-family:var(--font-primary);font-weight:700;font-size:clamp(2.2rem,4.5vw,3.3rem);line-height:1;margin:8px 0 6px;letter-spacing:-0.01em}
+  .verdict .lead{font-size:1.05rem;margin:0;max-width:640px}
+  .verdict .sub{margin:10px 0 0;font-size:.9rem;opacity:.85}
+  .years{display:flex;align-items:center;gap:14px;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.2);font-size:.88rem}
+  .years input{flex:1;accent-color:var(--mint);max-width:320px}
+  .years b{font-family:var(--font-primary);font-size:1.1rem;min-width:72px}
+
+  .sec-h{display:flex;justify-content:space-between;align-items:baseline;gap:12px;margin-bottom:16px;flex-wrap:wrap}
+  .sec-h h2{font-size:1.1rem;font-weight:600;margin:0}
+  .sec-h span{font-size:.8rem;color:var(--ink-50)}
+
+  .bars{display:grid;gap:14px}
+  .bar-row{display:grid;grid-template-columns:110px 1fr 110px;align-items:center;gap:12px}
+  .bar-row .lbl{font-weight:600;font-size:.9rem}
+  .bar-row .val{text-align:right;font-family:var(--font-primary);font-weight:700;font-size:1.15rem}
+  .track{height:30px;background:var(--bg);border-radius:7px;overflow:hidden;display:flex}
+  .track i{display:block;height:100%;transition:width .35s ease}
+  .legend{display:flex;gap:18px;margin-top:14px;font-size:.76rem;color:var(--ink-50);flex-wrap:wrap}
+  .legend span{display:inline-flex;align-items:center;gap:6px}
+  .legend i{width:12px;height:12px;border-radius:3px;background:var(--ink-50)}
+  .legend i.light{opacity:.35}
+
+  .wr table{width:100%;border-collapse:collapse;font-size:.9rem}
+  .wr th,.wr td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:right;font-variant-numeric:tabular-nums}
+  .wr th:first-child,.wr td:first-child{text-align:left;color:var(--ink-75)}
+  .wr th{font-size:.78rem;font-weight:600;color:var(--ink-50);text-transform:uppercase;letter-spacing:0.01em}
+  .wr th.one{color:var(--aub)}
+  .wr td.best{font-weight:700;color:var(--aub)}
+  tr.extra[hidden]{display:none}
+  .linkbtn{border:0;background:none;color:var(--aub);font-weight:600;font-size:.84rem;padding:12px 0 0}
+  .today{font-size:.82rem;color:var(--ink-75);margin-top:12px;padding:10px 12px;background:var(--bg);border-radius:var(--r-sm)}
+
+  .chart-box{position:relative;height:300px}
+  .chart-note{font-size:.84rem;color:var(--ink-75);margin:12px 0 0}
+
+  .pitch{background:var(--mint-10);border:1px solid var(--color-mint-25);border-radius:var(--r);padding:16px 18px;font-size:.92rem}
+  .pitch b{color:var(--aub)}
+  .disc{font-size:.76rem;color:var(--ink-50);line-height:1.45;margin:4px 2px 0}
+
+  .print-only{display:none}
+  .assume{display:grid;grid-template-columns:repeat(4,1fr);gap:6px 14px;font-size:.72rem}
+  .assume div{border-bottom:1px solid var(--line);padding:3px 0;display:flex;justify-content:space-between;gap:6px}
+  .assume span{color:var(--ink-50)}
+
+  @media (max-width:1200px){
+    .wrap{grid-template-columns:minmax(0,1fr)}
+    .live{order:5}
+  }
+  @media (max-width:640px){
+    .top-in{padding:10px 16px;gap:10px}
+    .brand h1{font-size:1rem}
+    .seg{width:100%}.seg button{flex:1;padding:8px 6px;font-size:.85rem}
+    .seg .long{display:none}.seg .short{display:inline}
+    .years{flex-wrap:wrap}
+    .actions{display:none}
+    .wrap{padding:16px;gap:16px}
+    .card{padding:16px}
+    .verdict{padding:22px 20px}
+    .bar-row{grid-template-columns:80px 1fr;}
+    .bar-row .val{grid-column:2;text-align:left;font-size:1rem;margin-top:-8px}
+    .assume{grid-template-columns:1fr 1fr}
+  }
+  @media (max-width:400px){.grid{grid-template-columns:minmax(0,1fr)}}
+  @media print{
+    @page{size:A4;margin:12mm}
+    *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    body{background:#fff;font-size:11px}
+    .top{position:static;border:0}
+    .seg,.actions,.live,.inputs,.linkbtn,.years input,.no-print{display:none!important}
+    .wrap{display:block;padding:0}
+    .card{break-inside:avoid;margin-bottom:10px;padding:12px 14px}
+    .verdict .big{font-size:2rem}
+    .print-only{display:block}
+    .chart-box{height:220px}
+    tr.extra[hidden]{display:table-row!important}
+  }
+
+  /* Einbettung in die Portal-Shell */
+  .wr .card{box-shadow:none}
+  .wr .verdict .eyebrow{margin:0;color:#fff}
+  .wr .verdict p{color:#fff}
+  /* Spalten dürfen schrumpfen – sonst hält das Diagramm-Canvas die Ergebnisspalte breit */
+  .wr .col{grid-template-columns:minmax(0,1fr)}
+  .wr .brand h1{max-width:none;line-height:1.2}
+  .wr .top{top:0}
+  @media (max-width:1023px){ .wr .top{top:64px} }
+  @media print{ .wr .top{top:0} }
+</style>
+</head>
+<body data-page="pv-calculator">
+<main class="content wr" id="main-content" tabindex="-1">
+<header class="top">
+  <div class="top-in">
+    <div class="brand">
+      <h1>Wirtschaftlichkeit</h1>
+    </div>
+    <div class="seg" role="tablist" aria-label="Was wird verglichen?">
+      <button role="tab" data-mod="pv"><span class="long">Photovoltaik</span><span class="short">PV</span></button>
+      <button role="tab" data-mod="wp"><span class="long">Wärmepumpe</span><span class="short">WP</span></button>
+      <button role="tab" data-mod="combo"><span class="long">PV + Wärmepumpe</span><span class="short">PV + WP</span></button>
+    </div>
+    <div class="live" aria-live="polite"><span id="liveLbl">Vorteil 1KOMMA5°</span><b id="liveVal" class="num">–</b></div>
+    <div class="actions">
+      <button class="btn" id="resetBtn">Zurücksetzen</button>
+      <button class="btn primary" onclick="window.print()">PDF / Drucken</button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <!-- Eingaben -->
+  <section class="col inputs" id="inputs" aria-label="Eingaben"></section>
+
+  <!-- Ergebnisse -->
+  <section class="col" aria-label="Ergebnis">
+    <div class="card print-only">
+      <div class="sec-h"><h2 id="printTitle">Wirtschaftlichkeitsvergleich</h2><span id="printDate"></span></div>
+      <div class="assume" id="assume"></div>
+    </div>
+
+    <div class="card verdict">
+      <div class="eyebrow" id="vEyebrow">Ergebnis</div>
+      <div class="big num" id="vBig">–</div>
+      <p class="lead" id="vLead"></p>
+      <p class="sub" id="vSub"></p>
+      <div class="years">
+        <span>Betrachtung</span>
+        <input type="range" id="years" min="5" max="30" step="1" value="20" aria-label="Betrachtungszeitraum in Jahren">
+        <b class="num" id="yearsVal">20 Jahre</b>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="sec-h"><h2>Gesamtkosten im Vergleich</h2><span id="barsSpan"></span></div>
+      <div class="bars" id="bars"></div>
+      <div class="legend"><span><i></i>Investition</span><span><i class="light"></i>Laufende Kosten (Strom, Heizung, Wartung)</span></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-h"><h2>Kennzahlen</h2><span>1KOMMA5° vs. Mitbewerber</span></div>
+      <table>
+        <thead><tr><th></th><th class="one">1KOMMA5°</th><th>Mitbewerber</th></tr></thead>
+        <tbody id="kpiBody"></tbody>
+      </table>
+      <button class="linkbtn" id="moreBtn">Alle Details anzeigen</button>
+      <div class="today" id="today"></div>
+    </div>
+
+    <div class="card">
+      <div class="sec-h"><h2>Kostenverlauf</h2><span>kumuliert, inkl. Investition</span></div>
+      <div class="chart-box"><canvas id="chart" aria-label="Kumulierte Kosten über die Jahre"></canvas></div>
+      <p class="chart-note" id="chartNote"></p>
+    </div>
+
+    <div class="pitch" id="pitch"></div>
+    <p class="disc">Prognose auf Basis Ihrer Angaben und vereinfachter Annahmen (Jahresbilanz, saisonales Wärmepumpen-Lastprofil, HTW-orientierte Autarkie). Keine Garantie für tatsächliche Kosten, Erträge oder Einsparungen. Erzeugung, Autarkie, Einspeisung und Vermarktungserlöse hängen von Standort, Dach, Nutzerverhalten, Messkonzept und Vertragsmodell ab.</p>
+  </section>
+</div>
+</main>
+
+<script>
+/* ============================================================
+   Zustand & Felder
+   ============================================================ */
+const isPV = s => s.mod === 'pv', isWP = s => s.mod === 'wp', isCombo = s => s.mod === 'combo';
+const pvWithHeat = s => isPV(s) && s.wpOn;
+const fossil = s => s.heatMode === 'fossil';
+const hasPV = s => !isWP(s);
+// Wärmepumpen-JAZ ist relevant, sobald aus Wärmebedarf Heizstrom berechnet wird
+const needsJaz = s => isCombo(s) || (isWP(s) && fossil(s)) || (pvWithHeat(s) && fossil(s));
+
+const FIELDS = {
+  // Kunde heute
+  house:       {label:'Stromverbrauch Haushalt', unit:'kWh/Jahr', def:5000, step:100, show:s => hasPV(s) || !fossil(s)},
+  monthly:     {label:'Stromabschlag heute', unit:'€/Monat', def:160, step:5, hint:'inkl. Grundpreis und Steuern', show:s => hasPV(s) || !fossil(s)},
+  evOn:        {type:'check', label:'E-Auto einbeziehen', def:false, show:hasPV},
+  ev_km:       {label:'Fahrleistung', unit:'km/Jahr', def:10000, step:500, show:s => hasPV(s) && s.evOn},
+  ev_kwh100:   {label:'Verbrauch E-Auto', unit:'kWh/100km', def:20, step:0.5, show:s => hasPV(s) && s.evOn},
+  ev_home:     {label:'Zuhause geladen', unit:'%', def:80, step:5, show:s => hasPV(s) && s.evOn},
+  wpOn:        {type:'check', label:'Wärmepumpe einbeziehen', def:false, show:isPV},
+  heatMode:    {type:'select', label:'Heizung heute', def:'fossil', options:{fossil:'Gas / Öl / Fernwärme', wp:'Wärmepumpe vorhanden'}, show:s => isWP(s) || pvWithHeat(s), full:true},
+  heatDemand:  {label:'Wärmebedarf', unit:'kWh/Jahr', def:20000, step:500, hint:'z. B. bisheriger Gasverbrauch', show:s => isCombo(s) || ((isWP(s) || pvWithHeat(s)) && fossil(s))},
+  heatMonthly: {label:'Heizkosten heute', unit:'€/Monat', def:165, step:5, show:s => isCombo(s) || (pvWithHeat(s) && fossil(s))},
+  fossilPrice: {label:'Gas-/Ölpreis', unit:'ct/kWh', def:12, step:0.5, show:s => isWP(s) && fossil(s)},
+  fossilInvest:{label:'Alternative: neuer Kessel', unit:'€', def:12000, step:500, hint:'Ersatzinvestition ohne Wärmepumpe', show:s => isWP(s) && fossil(s)},
+  wpPowerExisting:{label:'Stromverbrauch Wärmepumpe', unit:'kWh/Jahr', def:4000, step:100, show:s => (isWP(s) || pvWithHeat(s)) && !fossil(s)},
+  inflation:   {label:'Strompreissteigerung', unit:'% p.a.', def:1.5, step:0.1, show:() => true},
+  fossilBase:  {label:'Grundgebühr Gas/Öl', unit:'€/Jahr', def:150, step:10, show:s => isWP(s) && fossil(s)},
+  fossilMaint: {label:'Wartung Heizung heute', unit:'€/Jahr', def:250, step:50, show:s => isWP(s) && fossil(s)},
+  fossilInfl:  {label:'Preissteigerung Gas/Öl', unit:'% p.a.', def:3, step:0.1, show:s => isWP(s) && fossil(s)},
+  existingMaint:{label:'Wartung bestehende WP', unit:'€/Jahr', def:250, step:50, show:s => isWP(s) && !fossil(s)},
+};
+// Angebotsfelder für 1KOMMA5° (o1) und Mitbewerber (o2)
+function offerFields(n){
+  const p = 'o'+n+'_', one = n === 1;
+  return {
+    [p+'kwp']:      {label:'PV-Leistung', unit:'kWp', def:10, step:0.1, show:hasPV, rec:'pv'},
+    [p+'bat']:      {label:'Batteriespeicher', unit:'kWh', def:10, step:0.1, show:hasPV, rec:'bat'},
+    [p+'pvInvest']: {label:s => isCombo(s) ? 'Investition PV' : 'Investition', unit:'€', def:23000, step:500, show:hasPV},
+    [p+'wpInvest']: {label:s => isCombo(s) ? 'Investition WP nach Förderung' : 'Investition nach Förderung', unit:'€', def:one ? 15500 : 13500, step:500, show:s => !isPV(s)},
+    ...(one ? {
+      o1_price:     {label:'Strompreis Netzbezug', unit:'ct/kWh', def:15, step:0.1, hint:'aus HBK: Netzbezug inkl. §14a', show:() => true},
+    } : {
+      o2_dyn:       {type:'check', label:'Dynamischer Stromtarif', def:false, show:() => true},
+      o2_price:     {label:'Strompreis', unit:'ct/kWh', def:0, step:0.1, hint:'0 = wie heute (aus Abschlag)', show:s => hasPV(s) && !s.o2_dyn},
+      o2_wpPrice:   {label:'WP-Strompreis', unit:'ct/kWh', def:29, step:0.1, show:s => isWP(s) && !s.o2_dyn},
+    }),
+    // Weitere Annahmen
+    [p+'ertrag']:   {label:'Spez. Ertrag', unit:'kWh/kWp', def:1000, step:10, show:hasPV, more:true},
+    [p+'aut']:      {label:one ? 'Autarkie' : 'Autarkie manuell', unit:'%', def:'', step:1, placeholder:'auto', hint:one ? 'aus HBK, leer = automatisch' : 'leer = automatisch', show:hasPV, more:!one},
+    [p+'jaz']:      {label:'JAZ Wärmepumpe', unit:'', def:4, step:0.1, show:needsJaz, more:true},
+    [p+'eeg']:      {label:'Einkünfte der Stromvermarktung', unit:'ct/kWh', def:one ? 13 : 7.8, step:0.1, ...(one ? {hint:'aus HBK: Einspeisung ct/kWh'} : {}), show:hasPV, more:!one},
+    [p+'betrieb']:  {label:'Betriebskosten PV', unit:'€/Jahr', def:0, step:10, show:hasPV, more:true},
+    [p+'wartung']:  {label:'Wartung WP', unit:'€/Jahr', def:one ? 180 : 250, step:10, show:isWP, more:true},
+  };
+}
+Object.assign(FIELDS, offerFields(1), offerFields(2));
+
+const CARDS = [
+  {id:'kunde', step:1, title:'Kunde heute',
+   main:['house','monthly','heatMode','heatDemand','heatMonthly','fossilPrice','fossilInvest','wpPowerExisting','evOn','ev_km','ev_kwh100','ev_home','wpOn'],
+   more:['inflation','fossilBase','fossilMaint','fossilInfl','existingMaint']},
+  {id:'one', step:2, title:'Angebot 1KOMMA5°', cls:'one',
+   main:['o1_kwp','o1_bat','o1_pvInvest','o1_wpInvest','o1_price','o1_eeg','o1_aut'],
+   more:['o1_ertrag','o1_jaz','o1_betrieb','o1_wartung']},
+  {id:'comp', step:3, title:'Angebot Mitbewerber',
+   main:['o2_kwp','o2_bat','o2_pvInvest','o2_wpInvest','o2_dyn','o2_price','o2_wpPrice'],
+   more:['o2_ertrag','o2_aut','o2_jaz','o2_eeg','o2_betrieb','o2_wartung']},
+];
+
+const S = {};
+function resetState(){
+  const mod = S.mod || 'pv';
+  Object.entries(FIELDS).forEach(([k,f]) => S[k] = f.def);
+  S.mod = mod; S.years = 20;
+}
+resetState();
+
+/* ============================================================
+   Formatierung
+   ============================================================ */
+const de = (n, d=0) => n.toLocaleString('de-DE', {minimumFractionDigits:d, maximumFractionDigits:d});
+const euro = n => (n < 0 ? '−' : '') + de(Math.abs(Math.round(n))) + ' €';
+const kwh = n => de(Math.round(n)) + ' kWh';
+const pct = n => de(n*100, 1) + ' %';
+const ctkwh = n => de(n*100, 1) + ' ct/kWh';
+const yrs = y => Number.isFinite(y) && y > 0 ? de(y, 1) + ' Jahre' : 'nicht erreicht';
+const num = k => { const v = parseFloat(S[k]); return Number.isFinite(v) ? v : 0; };
+
+/* ============================================================
+   Rechenkern (Logik aus v1.54 übernommen)
+   ============================================================ */
+const normalize = a => { const s = a.reduce((x,y)=>x+y,0); return a.map(x=>x/s); };
+const pvProfile = normalize([0.025,0.045,0.080,0.105,0.125,0.130,0.130,0.115,0.085,0.065,0.045,0.025]);
+const wpProfile = normalize([0.17,0.14,0.11,0.07,0.035,0.02,0.015,0.02,0.04,0.085,0.13,0.16]);
+
+function estimateAutarkyHTW(consumption, kwp, specificYield, storage){
+  if (consumption <= 0 || kwp <= 0 || specificYield <= 0) return 0;
+  const pvRatio = kwp * specificYield / consumption;
+  const storagePerMWh = storage / (consumption / 1000);
+  const directAutarky = Math.min(0.48 * (1 - Math.exp(-0.85 * pvRatio)), pvRatio * 0.98);
+  const storageEffect = 1 - Math.exp(-0.65 * Math.min(storagePerMWh, 1.5));
+  const technicalLimit = Math.min(0.92, pvRatio * 0.98);
+  const autarky = directAutarky + Math.max(technicalLimit - directAutarky, 0) * storageEffect;
+  return Math.max(0, Math.min(autarky, technicalLimit));
+}
+function estimateAutarkyWithProfile(base, ev, wpElec, kwp, specificYield, storage){
+  const total = base + ev + wpElec;
+  if (total <= 0) return 0;
+  const annual = estimateAutarkyHTW(total, kwp, specificYield, storage);
+  if (wpElec <= 0) return annual;
+  const pvYield = kwp * specificYield;
+  const storageEffect = 1 - Math.exp(-0.65 * Math.min(storage / (total / 1000), 1.5));
+  let limit = 0;
+  for (let i = 0; i < 12; i++){
+    const load = base/12 + ev/12 + wpElec * wpProfile[i];
+    limit += Math.min(load, pvYield * pvProfile[i] * (0.46 + 0.52 * storageEffect));
+  }
+  return Math.max(0, Math.min(annual, Math.min(limit / total, 0.92)));
+}
+const series = (start, yearCostFn, years) => {
+  const out = [start]; let cum = start;
+  for (let y = 0; y < years; y++){ cum += yearCostFn(y); out.push(cum); }
+  return out;
+};
+const evHome = () => S.evOn ? num('ev_km') * num('ev_kwh100') / 100 * num('ev_home') / 100 : 0;
+
+function sizingRec(n, base, ev, wpElec){
+  const spec = Math.max(num('o'+n+'_ertrag'), 1);
+  return {
+    pv: (base * 2.5 + ev + wpElec * 0.3) / spec,
+    bat: (base / 365) * (n === 1 ? 0.9 : 0.6) + (ev / 365) * 0.1 + (wpElec / 365) * 0.05,
+  };
+}
+
+// PV-System (Modul PV und Komplettsystem)
+function pvVariant(n, ctx){
+  const p = 'o'+n+'_';
+  const kwp = num(p+'kwp'), spec = Math.max(num(p+'ertrag'), 1), storage = num(p+'bat');
+  const jaz = Math.max(num(p+'jaz') || 4, 1);
+  const wpElec = ctx.wpElec(jaz);
+  const totalCons = ctx.base + ctx.ev + wpElec;
+  const dyn = n === 2 && S.o2_dyn;
+  const priceCt = dyn ? 29 : num(n === 1 ? 'o1_price' : 'o2_price');
+  const restPrice = priceCt > 0 ? priceCt / 100 : ctx.eff;
+  const eeg = num(p+'eeg') / 100, op = num(p+'betrieb');
+  const pvYield = kwp * spec;
+  const manualRaw = S[p+'aut'];
+  const manual = manualRaw !== '' && manualRaw != null && !isNaN(Number(manualRaw)) ? Math.max(0, Math.min(Number(manualRaw), 100)) / 100 : null;
+  const autarky = manual !== null ? manual : estimateAutarkyWithProfile(ctx.base, ctx.ev, wpElec, kwp, spec, storage);
+  const selfUse = Math.min(totalCons * autarky, pvYield);
+  const grid = Math.max(totalCons - selfUse, 0);
+  const rawFeedIn = Math.max(pvYield - selfUse, 0);
+  const limit = n === 2 && !dyn;               // 60-%-Einspeisegrenze beim Mitbewerber ohne dyn. Tarif
+  const feedIn = limit ? rawFeedIn * 0.6 : rawFeedIn;
+  const curtail = limit ? rawFeedIn * 0.4 : 0;
+  const pvInvest = num(p+'pvInvest');
+  const wpInvest = ctx.combo ? num(p+'wpInvest') : 0;
+  const invest = pvInvest + wpInvest;
+  const yearCost = y => grid * restPrice * Math.pow(1 + ctx.infl, y) + op - feedIn * eeg;
+  const s = series(invest, yearCost, ctx.years);
+  const year1Cost = yearCost(0);
+  const saving = ctx.statusYear - year1Cost;
+  return {invest, pvInvest, wpInvest, year1Cost, saving, amort: saving > 0 ? invest / saving : Infinity,
+          total: s[s.length-1], series: s, autarky, manual: manual !== null, pvYield, selfUse, grid, feedIn, curtail, limit,
+          restPrice, wpElec, rec: sizingRec(n, ctx.base, ctx.ev, wpElec)};
+}
+
+function calcPV(combo){
+  const years = S.years, infl = num('inflation') / 100;
+  const base = Math.max(num('house'), 1), monthly = num('monthly');
+  const eff = monthly * 12 / base;
+  const ev = evHome();
+  let wpElec, heatYear;
+  if (combo){
+    wpElec = jaz => num('heatDemand') / jaz;
+    heatYear = num('heatMonthly') * 12;
+  } else if (S.wpOn){
+    if (fossil(S)){ wpElec = jaz => num('heatDemand') / jaz; heatYear = num('heatMonthly') * 12; }
+    else { const e = num('wpPowerExisting'); wpElec = () => e; heatYear = e * eff; }
+  } else { wpElec = () => 0; heatYear = 0; }
+  const statusYear = monthly * 12 + ev * eff + heatYear;
+  const ctx = {base, ev, eff, wpElec, statusYear, years, infl, combo};
+  const status = {invest:0, year1:statusYear, series:series(0, y => statusYear * Math.pow(1 + infl, y), years)};
+  status.total = status.series[years];
+  return {status, one:pvVariant(1, ctx), comp:pvVariant(2, ctx), eff, ev, heatYear, base};
+}
+
+function calcWP(){
+  const years = S.years, mode = S.heatMode;
+  let status;
+  if (mode === 'wp'){
+    const eff = num('monthly') * 12 / Math.max(num('house'), 1);
+    const infl = num('inflation') / 100;
+    const y1 = num('wpPowerExisting') * eff + num('existingMaint');
+    status = {invest:0, year1:y1, eff, series:series(0, y => y1 * Math.pow(1 + infl, y), years)};
+  } else {
+    const infl = num('fossilInfl') / 100;
+    const y1 = num('heatDemand') * num('fossilPrice') / 100 + num('fossilBase') + num('fossilMaint');
+    const inv = num('fossilInvest');
+    status = {invest:inv, year1:y1, series:series(inv, y => y1 * Math.pow(1 + infl, y), years)};
+  }
+  status.total = status.series[years];
+  const variant = n => {
+    const p = 'o'+n+'_';
+    const invest = num(p+'wpInvest');
+    const jaz = Math.max(num(p+'jaz') || 4, 1);
+    const wpElec = mode === 'wp' ? num('wpPowerExisting') : num('heatDemand') / jaz;
+    const dyn = n === 2 && S.o2_dyn;
+    const price = (dyn ? 29 : num(n === 1 ? 'o1_price' : 'o2_wpPrice')) / 100;
+    const priceInfl = n === 2 ? num('inflation') / 100 : 0;   // wie v1.54: Dynamic-Pulse-Preis konstant
+    const op = num(p+'wartung');
+    const yearCost = y => wpElec * price * Math.pow(1 + priceInfl, y) + op;
+    const s = series(invest, yearCost, years);
+    const saving = status.year1 - yearCost(0);
+    return {invest, wpElec, restPrice:price, op, year1Cost:yearCost(0), saving,
+            amort: saving > 0 ? invest / saving : Infinity, total:s[years], series:s};
+  };
+  return {status, one:variant(1), comp:variant(2)};
+}
+
+/* ============================================================
+   Eingabe-Oberfläche
+   ============================================================ */
+const labelOf = (f) => typeof f.label === 'function' ? f.label(S) : f.label;
+
+function fieldHTML(k){
+  const f = FIELDS[k];
+  if (f.type === 'check'){
+    return `<label class="chk" data-f="${k}"><input type="checkbox" data-k="${k}"><span><span data-l="${k}"></span>${f.hint ? `<div class="hint">${f.hint}</div>` : ''}</span></label>`;
+  }
+  const control = f.type === 'select'
+    ? `<select data-k="${k}">${Object.entries(f.options).map(([v,t]) => `<option value="${v}">${t}</option>`).join('')}</select>`
+    : `<input type="number" inputmode="decimal" data-k="${k}" step="${f.step}" min="0" ${f.placeholder ? `placeholder="${f.placeholder}"` : ''}>${f.unit ? `<span class="u">${f.unit}</span>` : ''}`;
+  const rec = f.rec ? `<div class="rec" data-rec="${k}"></div>` : '';
+  return `<div class="f${f.full ? ' full' : ''}" data-f="${k}"><label data-l="${k}"></label><div class="in">${control}</div>${f.hint ? `<div class="hint">${f.hint}</div>` : ''}${rec}</div>`;
+}
+
+function buildInputs(){
+  document.getElementById('inputs').innerHTML = CARDS.map(c => `
+    <div class="card ${c.cls || ''}" id="card-${c.id}">
+      <div class="card-h"><span class="step">${c.step}</span><h2>${c.title}</h2></div>
+      <div class="grid">${c.main.map(fieldHTML).join('')}</div>
+      <details class="more" data-more="${c.id}"><summary>Weitere Annahmen</summary><div class="grid">${c.more.map(fieldHTML).join('')}</div></details>
+    </div>`).join('');
+  document.querySelectorAll('[data-k]').forEach(el => {
+    const k = el.dataset.k;
+    const ev = el.type === 'checkbox' || el.tagName === 'SELECT' ? 'change' : 'input';
+    el.addEventListener(ev, () => {
+      S[k] = el.type === 'checkbox' ? el.checked : (el.tagName === 'SELECT' || el.value === '' ? el.value : parseFloat(el.value));
+      render();
+    });
+  });
+}
+
+function syncInputs(){
+  document.querySelectorAll('[data-k]').forEach(el => {
+    const k = el.dataset.k;
+    if (el.type === 'checkbox') el.checked = !!S[k];
+    else if (document.activeElement !== el) el.value = S[k];
+  });
+}
+
+function updateVisibility(){
+  document.querySelectorAll('[data-f]').forEach(el => { el.hidden = !FIELDS[el.dataset.f].show(S); });
+  document.querySelectorAll('[data-l]').forEach(el => { el.textContent = labelOf(FIELDS[el.dataset.l]); });
+  document.querySelectorAll('details.more').forEach(d => {
+    d.hidden = ![...d.querySelectorAll('[data-f]')].some(f => !f.hidden);
+  });
+  document.querySelectorAll('.seg button').forEach(b => b.setAttribute('aria-selected', b.dataset.mod === S.mod));
+}
+
+/* ============================================================
+   Ergebnis-Darstellung
+   ============================================================ */
+let chart;
+const COLORS = {status:'#828282', one:'#5C068C', comp:'#222222'};
+const MOD_TITLES = {pv:'Photovoltaik', wp:'Wärmepumpe', combo:'Komplettsystem PV + Wärmepumpe'};
+
+function render(){
+  updateVisibility();
+  syncInputs();
+  const R = S.mod === 'wp' ? calcWP() : calcPV(S.mod === 'combo');
+  const {status, one, comp} = R, Y = S.years;
+  document.getElementById('yearsVal').textContent = Y + ' Jahre';
+
+  // Auslegungsempfehlung an den PV-Feldern
+  if (S.mod !== 'wp') [[1, one], [2, comp]].forEach(([n, v]) => {
+    const pvEl = document.querySelector(`[data-rec="o${n}_kwp"]`), batEl = document.querySelector(`[data-rec="o${n}_bat"]`);
+    pvEl.innerHTML = `Empfehlung ${de(v.rec.pv,1)} kWp · <button data-apply="o${n}_kwp" data-v="${v.rec.pv.toFixed(1)}">übernehmen</button>`;
+    batEl.innerHTML = `Empfehlung ${de(v.rec.bat,1)} kWh · <button data-apply="o${n}_bat" data-v="${v.rec.bat.toFixed(1)}">übernehmen</button>`;
+  });
+
+  // Urteil
+  const adv = comp.total - one.total, vsToday = status.total - one.total;
+  const big = document.getElementById('vBig'), lead = document.getElementById('vLead'), sub = document.getElementById('vSub');
+  const live = document.getElementById('liveVal');
+  document.getElementById('vEyebrow').textContent = MOD_TITLES[S.mod] + ' · ' + Y + ' Jahre';
+  if (adv > 0){
+    big.textContent = euro(adv);
+    lead.textContent = `spart der Kunde mit 1KOMMA5° gegenüber dem Mitbewerber über ${Y} Jahre.`;
+    live.textContent = euro(adv); live.classList.remove('neg');
+    document.getElementById('liveLbl').textContent = 'Vorteil 1KOMMA5°';
+  } else {
+    big.textContent = euro(Math.abs(adv));
+    lead.textContent = adv < 0 ? `liegt der Mitbewerber in dieser Rechnung über ${Y} Jahre günstiger.` : `Beide Angebote liegen gleichauf.`;
+    live.textContent = adv < 0 ? '−' + euro(Math.abs(adv)) : '0 €'; live.classList.add('neg');
+    document.getElementById('liveLbl').textContent = 'Differenz zu Mitbewerber';
+  }
+  sub.textContent = vsToday >= 0
+    ? `Gegenüber heute ohne neues System: ${euro(vsToday)} weniger Gesamtkosten.`
+    : `Gegenüber heute ohne neues System: ${euro(-vsToday)} Mehrkosten im Betrachtungszeitraum.`;
+
+  // Balken
+  document.getElementById('barsSpan').textContent = `Summe über ${Y} Jahre`;
+  const rows = [['Heute', status, COLORS.status], ['1KOMMA5°', one, COLORS.one], ['Mitbewerber', comp, COLORS.comp]];
+  const max = Math.max(...rows.map(r => Math.max(r[1].total, r[1].invest)), 1);
+  document.getElementById('bars').innerHTML = rows.map(([l, r, c]) => {
+    const inv = Math.max(r.invest, 0), run = Math.max(r.total - inv, 0);
+    const shownInv = r.total < inv ? Math.max(r.total, 0) : inv;
+    return `<div class="bar-row"><span class="lbl">${l}</span>
+      <div class="track" title="Investition ${euro(r.invest)} · laufend ${euro(r.total - r.invest)}">
+        <i style="width:${shownInv/max*100}%;background:${c}"></i><i style="width:${run/max*100}%;background:${c};opacity:.35"></i>
+      </div><span class="val num">${euro(r.total)}</span></div>`;
+  }).join('');
+
+  // Kennzahlen
+  const best = (a, b, lowerIsBetter = true) => a === b ? ['', ''] : ((a < b) === lowerIsBetter ? ['best', ''] : ['', 'best']);
+  const row = (label, a, b, fmt, opts = {}) => {
+    const [c1, c2] = opts.noBest || typeof a !== 'number' || typeof b !== 'number' ? ['', ''] : best(a, b, !opts.higher);
+    const f = v => typeof v === 'number' ? fmt(v) : v;
+    return `<tr class="${opts.extra ? 'extra' : ''}" ${opts.extra ? 'hidden' : ''}><td>${label}</td><td class="${c1}">${f(a)}</td><td class="${c2}">${f(b)}</td></tr>`;
+  };
+  const amortV = v => Number.isFinite(v.amort) ? v.amort : 999;
+  let html = row(`Gesamtkosten ${Y} Jahre`, one.total, comp.total, euro)
+    + row(S.mod === 'pv' ? 'Investition' : 'Investition nach Förderung', one.invest, comp.invest, euro, {noBest:true})
+    + row('Kosten im 1. Jahr', one.year1Cost, comp.year1Cost, euro)
+    + row('Ersparnis im 1. Jahr ggü. heute', one.saving, comp.saving, euro, {higher:true})
+    + row('Amortisation', amortV(one), amortV(comp), v => v === 999 ? 'nicht erreicht' : yrs(v));
+  if (S.mod !== 'wp'){
+    html += row('Autarkie', one.autarky, comp.autarky, v => pct(v), {higher:true})
+      + row('Strompreis (Netzbezug)', one.restPrice, comp.restPrice, ctkwh, {extra:true})
+      + row('PV-Ertrag', one.pvYield, comp.pvYield, kwh, {extra:true, noBest:true})
+      + row('Eigenverbrauch', one.selfUse, comp.selfUse, kwh, {extra:true, higher:true})
+      + row('Netzbezug', one.grid, comp.grid, kwh, {extra:true})
+      + row('Einspeisung', one.feedIn, comp.feedIn, kwh, {extra:true, noBest:true})
+      + row('Abregelung (60-%-Grenze)', one.limit ? one.curtail : 'keine', comp.limit ? comp.curtail : 'keine', kwh, {extra:true});
+    if (one.wpElec > 0 || comp.wpElec > 0) html += row('Strombedarf Wärmepumpe', one.wpElec, comp.wpElec, kwh, {extra:true});
+    if (S.mod === 'combo') html += row('Investition PV', one.pvInvest, comp.pvInvest, euro, {extra:true, noBest:true})
+      + row('Investition WP nach Förderung', one.wpInvest, comp.wpInvest, euro, {extra:true, noBest:true});
+  } else {
+    html += row('Strombedarf Wärmepumpe', one.wpElec, comp.wpElec, kwh)
+      + row('Strompreis WP', one.restPrice, comp.restPrice, ctkwh, {extra:true})
+      + row('Wartung / Jahr', one.op, comp.op, euro, {extra:true});
+  }
+  document.getElementById('kpiBody').innerHTML = html;
+  if (detailsOpen) document.querySelectorAll('tr.extra').forEach(r => r.hidden = false);
+
+  const today = document.getElementById('today');
+  if (S.mod === 'wp'){
+    today.innerHTML = fossil(S)
+      ? `<b>Heute:</b> ${euro(status.year1)} Heizkosten im 1. Jahr (Gas/Öl inkl. Grundgebühr und Wartung) plus ${euro(status.invest)} für einen neuen Kessel.`
+      : `<b>Heute:</b> ${euro(status.year1)} im 1. Jahr für die bestehende Wärmepumpe (${ctkwh(status.eff)} effektiver Strompreis).`;
+  } else {
+    const parts = [`${euro(status.year1)} Energiekosten im 1. Jahr`, `effektiver Strompreis ${ctkwh(R.eff)}`];
+    if (R.ev > 0) parts.push(`E-Auto ${kwh(R.ev)} zuhause`);
+    if (R.heatYear > 0) parts.push(`davon Heizung ${euro(R.heatYear)}`);
+    today.innerHTML = `<b>Heute:</b> ${parts.join(' · ')}`;
+  }
+
+  // Chart
+  drawChart(status, one, comp, Y);
+  const breakEven = one.series.findIndex((v, i) => i > 0 && v <= status.series[i]);
+  document.getElementById('chartNote').innerHTML = breakEven > 0
+    ? `Mit 1KOMMA5° liegen die kumulierten Kosten ab <b>Jahr ${breakEven}</b> unter den Kosten ohne neues System.`
+    : `Innerhalb von ${Y} Jahren liegen die kumulierten Kosten mit 1KOMMA5° nicht unter den heutigen Kosten.`;
+
+  // Einordnung
+  const premium = one.invest - comp.invest, annualAdv = comp.year1Cost - one.year1Cost;
+  let pitch;
+  if (adv > 0){
+    pitch = premium > 0
+      ? `Das 1KOMMA5°-Angebot kostet in der Anschaffung <b>${euro(premium)}</b> mehr, spart aber jedes Jahr <b>${euro(annualAdv)}</b> laufende Kosten`
+        + (annualAdv > 0 ? ` – der Mehrpreis ist nach rund <b>${de(premium / annualAdv, 1)} Jahren</b> wieder drin.` : '.')
+        + ` Über ${Y} Jahre bleibt ein Vorteil von <b>${euro(adv)}</b>.`
+      : `1KOMMA5° ist in der Anschaffung nicht teurer und spart jedes Jahr <b>${euro(annualAdv)}</b> laufende Kosten. Über ${Y} Jahre: <b>${euro(adv)}</b> Vorteil.`;
+    pitch += S.mod === 'wp'
+      ? ' Hebel: Dynamic-Pulse-Strompreis, Wartung und Investition.'
+      : ' Hebel: günstiger Dynamic-Pulse-Strompreis, höhere Autarkie und Einkünfte aus der Stromvermarktung.';
+  } else {
+    pitch = `In dieser Rechnung liegt der Mitbewerber vorne. Prüfen Sie Investition, Strompreis${S.mod === 'wp' ? ', JAZ' : ', Speichergröße'} und ob das Mitbewerberangebot vergleichbar ausgelegt ist.`;
+  }
+  document.getElementById('pitch').innerHTML = pitch;
+
+  // Druckübersicht
+  document.getElementById('printTitle').textContent = 'Wirtschaftlichkeitsvergleich ' + MOD_TITLES[S.mod];
+  document.getElementById('printDate').textContent = new Date().toLocaleDateString('de-DE');
+  document.getElementById('assume').innerHTML = Object.entries(FIELDS)
+    .filter(([k, f]) => f.show(S) && f.type !== 'check')
+    .map(([k, f]) => {
+      const owner = k.startsWith('o1_') ? '1K5 · ' : k.startsWith('o2_') ? 'MB · ' : '';
+      const v = f.type === 'select' ? f.options[S[k]] : (S[k] === '' ? 'auto' : de(Number(S[k]), Number(S[k]) % 1 ? 1 : 0) + (f.unit ? ' ' + f.unit : ''));
+      return `<div><span>${owner}${labelOf(f)}</span><b>${v}</b></div>`;
+    }).join('')
+    + (S.evOn && hasPV(S) ? '<div><span>E-Auto</span><b>ja</b></div>' : '')
+    + (S.o2_dyn ? '<div><span>MB · Dyn. Tarif</span><b>ja</b></div>' : '');
+}
+
+function drawChart(status, one, comp, Y){
+  if (typeof Chart === 'undefined') return;
+  const labels = Array.from({length: Y + 1}, (_, i) => i);
+  const ds = (label, data, color, extra = {}) => ({label, data, borderColor:color, backgroundColor:color, borderWidth:2, pointRadius:0, pointHoverRadius:4, tension:.15, ...extra});
+  const data = {labels, datasets:[
+    ds('1KOMMA5°', one.series, COLORS.one, {borderWidth:3}),
+    ds('Mitbewerber', comp.series, COLORS.comp, {borderDash:[6,5]}),
+    ds('Heute', status.series, COLORS.status),
+  ]};
+  if (chart){ chart.data = data; chart.update('none'); return; }
+  chart = new Chart(document.getElementById('chart'), {
+    type:'line', data,
+    options:{
+      responsive:true, maintainAspectRatio:false, interaction:{mode:'index', intersect:false},
+      scales:{
+        x:{title:{display:true, text:'Jahr'}, grid:{display:false}},
+        y:{ticks:{callback:v => de(v/1000) + ' T€'}, grid:{color:'#EFE6F3'}},
+      },
+      plugins:{
+        legend:{position:'bottom', labels:{usePointStyle:true, pointStyle:'line', font:{family:'Inter'}}},
+        tooltip:{callbacks:{title:i => 'Jahr ' + i[0].label, label:c => c.dataset.label + ': ' + euro(c.parsed.y)}},
+      },
+    },
+  });
+}
+
+/* ============================================================
+   Ereignisse
+   ============================================================ */
+let detailsOpen = false;
+buildInputs();
+document.querySelectorAll('.seg button').forEach(b => b.addEventListener('click', () => { S.mod = b.dataset.mod; render(); }));
+document.getElementById('years').addEventListener('input', e => { S.years = parseInt(e.target.value, 10); render(); });
+document.getElementById('resetBtn').addEventListener('click', () => { resetState(); document.getElementById('years').value = 20; render(); });
+document.getElementById('moreBtn').addEventListener('click', e => {
+  detailsOpen = !detailsOpen;
+  document.querySelectorAll('tr.extra').forEach(r => r.hidden = !detailsOpen);
+  e.target.textContent = detailsOpen ? 'Details ausblenden' : 'Alle Details anzeigen';
+});
+document.getElementById('inputs').addEventListener('click', e => {
+  const b = e.target.closest('[data-apply]');
+  if (!b) return;
+  S[b.dataset.apply] = parseFloat(b.dataset.v);
+  render();
+});
+window.addEventListener('beforeprint', () => chart && chart.resize());
+render();
+</script>
+</body>
+</html>

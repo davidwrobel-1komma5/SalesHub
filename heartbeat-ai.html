@@ -1,0 +1,270 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Heartbeat AI verbindet Solaranlage, Speicher, Wärmepumpe und Wallbox zu einem intelligenten Energiesystem.">
+  <title>Heartbeat AI | 1KOMMA5°</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css?v=20261020-brand">
+  <script src="assets/app.js?v=20261020-brand" defer></script>
+  <script src="assets/heartbeat-sim.js?v=20260923-7" defer></script>
+</head>
+<body data-page="heartbeat-pitch">
+  <main class="content heartbeat-page" id="main-content" tabindex="-1">
+    <div class="content-inner heartbeat-inner">
+      <header class="heartbeat-hero">
+        <div class="heartbeat-hero__copy">
+          <p class="eyebrow">Heartbeat AI</p>
+          <h1>Ihr Zuhause weiß, wann Energie am wertvollsten ist.</h1>
+          <p class="heartbeat-hero__lead">Heartbeat AI plant, steuert und verbindet Ihr Energiesystem – damit Solarstrom, Speicher, Wärme und Mobilität automatisch zusammenspielen.</p>
+          <ul class="heartbeat-checks">
+            <li><strong>Automatisch der günstigste Moment:</strong> Heartbeat AI nutzt bevorzugt selbst erzeugten Strom und bezieht bei Bedarf zu möglichst günstigen Zeiten nach.</li>
+            <li><strong>Ein vernetztes Gesamtsystem:</strong> PV, Speicher, Wärmepumpe und Wallbox arbeiten aufeinander abgestimmt zusammen statt isoliert nebeneinander.</li>
+            <li><strong>Überschuss wird sinnvoll genutzt:</strong> Wo verfügbar, wird überschüssiger Strom eingespeist oder vermarktet, wenn es sich lohnt.</li>
+          </ul>
+          <a class="heartbeat-button" href="#vorteile">Vorteile entdecken</a>
+        </div>
+        <div class="heartbeat-hero__visual">
+          <span class="placeholder-tag">Platzhalter · Produktfoto folgt</span>
+          <div class="image-placeholder">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2.5"/><circle cx="8.5" cy="9.5" r="1.6"/><path d="m4 17 5-5 3.5 3.5L17 11l3 3"/></svg>
+            <span>Produktfoto Heartbeat-AI-Gerät</span>
+          </div>
+        </div>
+      </header>
+
+      <section class="hb-sim" id="hb-sim" aria-labelledby="hb-sim-heading">
+        <div class="section-heading">
+          <p class="eyebrow">Interaktiv</p>
+          <h2 id="hb-sim-heading">So entscheidet Heartbeat AI</h2>
+          <p>Stellen Sie Tageszeit, Strompreis, Temperatur und Jahreszeit ein – und sehen Sie, wohin der Strom im Haus fließt und warum.</p>
+        </div>
+
+        <div class="hb-sim__card">
+          <div class="filter-chips hb-sim__presets" role="group" aria-label="Beispielsituationen">
+            <button type="button" class="filter-chip is-active" aria-pressed="true" data-preset='{"h":13,"p":7,"t":26,"s":2,"c":95,"a":5000,"e":20}'>Sonniger Sommermittag</button>
+            <button type="button" class="filter-chip" aria-pressed="false" data-preset='{"h":8,"p":9,"t":18,"s":2,"c":60,"a":5000,"e":20}'>Sommermorgen</button>
+            <button type="button" class="filter-chip" aria-pressed="false" data-preset='{"h":13.5,"p":-4,"t":17,"s":1,"c":60,"a":5000,"e":40}'>Negativer Strompreis</button>
+            <button type="button" class="filter-chip" aria-pressed="false" data-preset='{"h":19,"p":32,"t":12,"s":3,"c":85,"a":5000,"e":15}'>Preisspitze: Verkauf ins Netz</button>
+            <button type="button" class="filter-chip" aria-pressed="false" data-preset='{"h":18.5,"p":18,"t":-4,"s":0,"c":50,"a":5000,"e":30}'>Teurer Winterabend</button>
+            <button type="button" class="filter-chip" aria-pressed="false" data-preset='{"h":1,"p":3,"t":-2,"s":0,"c":30,"a":5000,"e":30}'>Günstige Winternacht</button>
+          </div>
+
+          <div class="hb-sim__layout">
+          <div class="hb-sim__visual">
+          <div class="hb-sim__stage">
+            <svg class="hb-scene" viewBox="0 0 1000 560" role="img" aria-labelledby="hb-scene-title hb-scene-desc">
+              <title id="hb-scene-title">Energiefluss im Zuhause</title>
+              <desc id="hb-scene-desc">Haus mit Solaranlage, Speicher, Wärmepumpe, Haushalt, Heartbeat AI, Wallbox mit E-Auto und Anschluss an das Stromnetz. Leuchtende Linien zeigen, wohin der Strom gerade fließt.</desc>
+
+              <rect class="hb-sky-night" id="hb-night" x="0" y="0" width="1000" height="475"/>
+              <g class="hb-stars" id="hb-stars">
+                <circle cx="210" cy="58" r="1.6"/><circle cx="300" cy="96" r="1.2"/><circle cx="470" cy="44" r="1.8"/>
+                <circle cx="652" cy="82" r="1.3"/><circle cx="760" cy="40" r="1.5"/><circle cx="560" cy="102" r="1.1"/><circle cx="930" cy="140" r="1.4"/>
+              </g>
+              <g class="hb-moon" id="hb-moon" transform="translate(880 78)">
+                <circle class="hb-line hb-fill-white" r="17"/><circle class="hb-line" cx="-5" cy="-4" r="3"/><circle class="hb-line" cx="6" cy="6" r="2"/>
+              </g>
+              <g class="hb-sun" id="hb-sun" transform="translate(500 60)">
+                <circle class="hb-line hb-fill-white" r="22"/>
+                <path class="hb-line" d="M0 -38V-30M0 30V38M-38 0H-30M30 0H38M-27 -27L-21 -21M27 -27L21 -21M-27 27L-21 21M27 27L21 21"/>
+              </g>
+              <g class="hb-snow" id="hb-snow">
+                <path class="hb-line hb-line--thin" d="M250 90v14M244 93l12 8M244 101l12 -8M690 58v14M684 61l12 8M684 69l12 -8M945 196v14M939 199l12 8M939 207l12 -8"/>
+              </g>
+
+              <!-- Stromnetz -->
+              <path class="hb-line" d="M104 205L110 175L116 205M104 205L97 255L91 315L85 375L70 475M116 205L123 255L129 315L135 375L150 475M52 255H168M52 255V265M168 255V265M58 315H162M58 315V325M162 315V325M91 315H129M85 375H135M97 255L129 315M123 255L91 315M91 315L135 375M129 315L85 375M85 375L143 455M135 375L77 455"/>
+
+              <g class="hb-grid-badge" id="hb-grid-badge" style="display:none"><rect x="50" y="126" width="120" height="30" rx="15"/><text x="110" y="146"></text></g>
+
+              <!-- Boden, Haus, Garage -->
+              <path class="hb-line" d="M36 475H964"/>
+              <path class="hb-line" d="M297 315L397 127H604L499 315ZM499 315L604 127L714 315M603 150L700 315M297 315H714M320 315V475M700 315V345"/>
+              <path class="hb-panel" d="M341 277H491L556 155H406Z"/>
+              <path class="hb-panel-grid" d="M363 236.6H512.4M384.5 196H534M378.6 277L443.6 155M416 277L481 155M453.4 277L518.4 155"/>
+              <path class="hb-line" d="M700 475V345H895V475"/>
+              <circle class="hb-line hb-fill-white" cx="797" cy="345" r="16"/>
+              <path class="hb-line" d="M800 334L791 347H802L795 358"/>
+
+              <!-- Hausnetz und Energieflüsse -->
+              <path class="hb-bus" d="M250 362H575"/>
+              <g id="hb-flows"></g>
+
+              <!-- Wärmepumpe -->
+              <rect class="hb-line hb-fill-white" x="214" y="415" width="72" height="60" rx="6"/>
+              <circle class="hb-line" cx="237" cy="445" r="15"/>
+              <path class="hb-line" d="M237 433V457M225 445H249M263 428H277M263 439H277M263 450H277M263 461H277"/>
+              <!-- Speicher mit Füllstand -->
+              <rect class="hb-line hb-fill-white" x="385" y="392" width="40" height="83" rx="4"/>
+              <rect class="hb-soc" id="hb-soc" x="389" y="396" width="32" height="75" rx="2"/>
+              <path class="hb-line" d="M393 405H417M393 462H417M409 418L399 434H411L401 450"/>
+              <!-- Haushalt -->
+              <rect class="hb-line hb-fill-white" x="485" y="392" width="40" height="40" rx="4"/>
+              <circle class="hb-line" cx="505" cy="406" r="7"/>
+              <path class="hb-line" d="M501 416H509M502 421H508"/>
+              <!-- Heartbeat AI -->
+              <rect class="hb-line hb-fill-white" x="575" y="330" width="82" height="82" rx="12"/>
+              <path class="hb-line" d="M590 398V360L616 342L642 360"/>
+              <path class="hb-heart" d="M616 395C600 383 596 373 603 367C609 362 615 366 616 370C617 366 623 362 629 367C636 373 632 383 616 395Z"/>
+              <!-- Wallbox und E-Auto -->
+              <rect class="hb-line hb-fill-white" x="706" y="382" width="16" height="42" rx="3"/>
+              <path class="hb-line" d="M710 392H718"/>
+              <path class="hb-line hb-fill-white" d="M772 432L784 404H846L858 432"/>
+              <path class="hb-line hb-fill-white" d="M760 432H870Q878 432 878 440V458Q878 464 872 464H758Q752 464 752 458V440Q752 432 760 432Z"/>
+              <path class="hb-line" d="M760 444L778 448M870 444L852 448M796 452H834M772 426H764M858 426H866"/>
+              <rect class="hb-line hb-fill-white" x="760" y="464" width="18" height="9" rx="3"/>
+              <rect class="hb-line hb-fill-white" x="852" y="464" width="18" height="9" rx="3"/>
+
+              <!-- Beschriftung -->
+              <text class="hb-label hb-label--end" x="355" y="170">Solaranlage</text>
+              <text class="hb-status hb-label--end" id="hb-s-pv" x="355" y="187"></text>
+              <text class="hb-label" x="52" y="500">Stromnetz</text><text class="hb-status" id="hb-s-grid" x="52" y="517"></text>
+              <text class="hb-label" x="250" y="500">Wärmepumpe</text><text class="hb-status" id="hb-s-wp" x="250" y="517"></text>
+              <text class="hb-label" x="405" y="500">Speicher</text><text class="hb-status" id="hb-s-bat" x="405" y="517"></text>
+              <text class="hb-label" x="505" y="500">Haushalt</text><text class="hb-status" id="hb-s-home" x="505" y="517"></text>
+              <text class="hb-label" x="616" y="500">Heartbeat AI</text><text class="hb-status" id="hb-s-hb" x="616" y="517"></text>
+              <text class="hb-label" x="815" y="500">Wallbox &amp; E-Auto</text><text class="hb-status" id="hb-s-ev" x="815" y="517"></text>
+            </svg>
+          </div>
+            <ul class="hb-sim__devices" id="hb-devices"></ul>
+            <div class="hb-sim__decision" aria-live="polite">
+              <p class="eyebrow">Heartbeat entscheidet</p>
+              <h3 id="hb-headline"></h3>
+              <ul class="check-list" id="hb-reasons"></ul>
+              <p class="hb-sim__naive" id="hb-naive" hidden></p>
+            </div>
+          </div>
+            <div class="parameter-list hb-sim__controls">
+              <p class="hb-sim__group">Situation</p>
+              <div class="parameter">
+                <div class="range-head"><label for="hb-time">Tageszeit</label><span class="range-value" id="hb-time-out"></span></div>
+                <input id="hb-time" type="range" min="0" max="23.75" step="0.25" value="13">
+                <div class="range-labels" aria-hidden="true"><span>0 Uhr</span><span>12 Uhr</span><span>23:45</span></div>
+              </div>
+              <div class="parameter">
+                <div class="range-head"><label for="hb-price">Börsenstrompreis (Day-Ahead)</label><span class="range-value" id="hb-price-out"></span></div>
+                <input id="hb-price" type="range" min="-10" max="40" step="1" value="7">
+                <div class="range-labels" aria-hidden="true"><span>−10 ct</span><span>0 ct</span><span>40 ct</span></div>
+              </div>
+              <div class="parameter">
+                <div class="range-head"><label for="hb-temp">Außentemperatur</label><span class="range-value" id="hb-temp-out"></span></div>
+                <input id="hb-temp" type="range" min="-15" max="35" step="1" value="26">
+                <div class="range-labels" aria-hidden="true"><span>−15 °C</span><span>35 °C</span></div>
+              </div>
+              <div class="parameter">
+                <div class="range-head"><label for="hb-season">Jahreszeit</label><span class="range-value" id="hb-season-out"></span></div>
+                <input id="hb-season" type="range" min="0" max="3" step="1" value="2">
+                <div class="range-labels" aria-hidden="true"><span>Winter</span><span>Frühling</span><span>Sommer</span><span>Herbst</span></div>
+              </div>
+              <p class="hb-sim__group">Ihr Zuhause</p>
+              <div class="parameter">
+                <div class="range-head"><label for="hb-home-input">Haushaltsverbrauch</label><span class="range-value" id="hb-home-out"></span></div>
+                <input id="hb-home-input" type="range" min="2000" max="10000" step="500" value="5000">
+                <div class="range-labels" aria-hidden="true"><span>2.000 kWh</span><span>10.000 kWh</span></div>
+              </div>
+              <div class="parameter">
+                <div class="range-head"><label for="hb-ev-input">Ladebedarf E-Auto</label><span class="range-value" id="hb-ev-out"></span></div>
+                <input id="hb-ev-input" type="range" min="0" max="60" step="5" value="20">
+                <div class="range-labels" aria-hidden="true"><span>voll</span><span>60 kWh</span></div>
+              </div>
+              <div class="parameter">
+                <div class="range-head"><label for="hb-soc-input">Speicherbeladung</label><span class="range-value" id="hb-soc-out"></span></div>
+                <input id="hb-soc-input" type="range" min="0" max="100" step="5" value="95">
+                <div class="range-labels" aria-hidden="true"><span>leer</span><span>50 %</span><span>voll</span></div>
+              </div>
+            </div>
+          </div>
+
+          <p class="hb-sim__note">Vereinfachtes Modell zur Veranschaulichung: 10 kWp Solaranlage, 10 kWh Speicher, Wallbox mit angeschlossenem E-Auto, Abfahrt um 7 Uhr. Verkauf ins Netz ab 20 ct/kWh, 30 % Speicherreserve bleiben für das Haus. Tatsächliche Entscheidungen berücksichtigen zusätzlich Wetter- und Preisprognosen, Tarif und Anlagenstatus. Keine Ertrags- oder Einsparprognose.</p>
+        </div>
+      </section>
+
+      <section class="heartbeat-proof" aria-label="Das Prinzip von Heartbeat AI">
+        <p>Ein System statt vieler Einzelgeräte</p>
+        <div><strong>Vorausschauen</strong><span>Wetter, Verbrauch und Preise berücksichtigen</span></div>
+        <div><strong>Automatisch steuern</strong><span>Energie zur richtigen Zeit verteilen</span></div>
+        <div><strong>Mit dem Markt verbinden</strong><span>Flexibilität wirtschaftlich nutzbar machen</span></div>
+      </section>
+
+      <section class="heartbeat-showcase" aria-label="Heartbeat AI im Alltag">
+        <span class="placeholder-tag">Platzhalter · Screenshot folgt</span>
+        <div class="image-placeholder">
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="3" width="16" height="18" rx="2.5"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>
+          <span>Screenshot Heartbeat-AI-App / Dashboard</span>
+        </div>
+      </section>
+
+      <section class="heartbeat-problem">
+        <p class="eyebrow">Die neue Energiewelt</p>
+        <h2>Energie ist nicht mehr zu jeder Stunde gleich viel wert.</h2>
+        <p>Wenn viel Sonne und Wind verfügbar sind, fallen häufig die Börsenpreise. Zu anderen Zeiten wird Energie knapper und teurer. Ein klassisches Energiemanagement sieht nur den Moment. Heartbeat AI plant voraus.</p>
+        <div class="heartbeat-market-chart" aria-label="Vereinfachter Tagesverlauf von Solarerzeugung und Strompreis"><div class="heartbeat-market-chart__label"><span>günstig</span><strong>Jetzt Energie nutzen oder speichern</strong></div><svg viewBox="0 0 900 250" role="img"><defs><linearGradient id="hbSolar" x1="0" y1="0" x2="0" y2="1"><stop stop-color="#2ED8C3" stop-opacity=".9"/><stop offset="1" stop-color="#2ED8C3" stop-opacity=".08"/></linearGradient></defs><path class="heartbeat-market-chart__grid" d="M30 45H870M30 125H870M30 205H870"/><path class="heartbeat-market-chart__solar" d="M30 205C210 205 245 192 315 125S425 28 510 55s105 111 180 137c57 20 120 13 180 13V225H30Z"/><path class="heartbeat-market-chart__price" d="M30 72c130-35 205 7 280 78s151 59 220 0 151-72 215-22 78 21 125-28"/><text x="30" y="242">00 Uhr</text><text x="420" y="242">12 Uhr</text><text x="820" y="242">24 Uhr</text></svg></div>
+      </section>
+
+      <section id="vorteile" class="heartbeat-logic" aria-labelledby="logic-heading">
+        <p class="eyebrow">Die drei Ebenen</p>
+        <h2 id="logic-heading">Energie intelligent nutzen – in beide Richtungen.</h2>
+        <p>Was Sie brauchen, wird möglichst günstig beschafft. Was Sie haben, wird intelligent genutzt und – wo verfügbar – möglichst wertvoll vermarktet.</p>
+        <div class="heartbeat-logic__steps">
+          <a href="#eigenverbrauch"><span>01</span><strong>Eigene Energie nutzen</strong><small>Eigenverbrauch optimieren</small></a>
+          <a href="#strombezug"><span>02</span><strong>Energie günstig beschaffen</strong><small>Strombezug optimieren</small></a>
+          <a href="#vermarktung"><span>03</span><strong>Flexibilität vermarkten</strong><small>Marktwert erschließen</small></a>
+        </div>
+      </section>
+
+      <div class="heartbeat-benefits heartbeat-benefits--clustered">
+        <section class="heartbeat-cluster heartbeat-cluster--mint" id="eigenverbrauch">
+          <div class="heartbeat-cluster__number">01</div>
+          <div class="heartbeat-cluster__intro"><p class="eyebrow">Eigenverbrauchsoptimierung</p><h2>Die eigene Energie bestmöglich nutzen.</h2><p>Heartbeat AI verbindet die Energieflüsse innerhalb des Hauses und entscheidet intelligent, wann selbst erzeugter Solarstrom direkt genutzt, gespeichert oder für flexible Verbraucher eingesetzt wird.</p><blockquote>Heartbeat holt mehr aus jeder selbst erzeugten Kilowattstunde heraus.</blockquote></div>
+          <div class="heartbeat-cluster__visual heartbeat-solar-card" aria-label="Solarstrom wird intelligent im Zuhause verteilt"><div class="heartbeat-solar-card__sun">☀<span>PV-Erzeugung</span><strong>verfügbar</strong></div><div class="heartbeat-solar-card__flow"></div><div class="heartbeat-solar-card__target"><span>⌂</span><strong>Zuhause</strong><small>direkt nutzen</small></div><div class="heartbeat-solar-card__target"><span>▣</span><strong>Speicher</strong><small>vorausschauend laden</small></div><div class="heartbeat-solar-card__target"><span>♨</span><strong>Wärme & Auto</strong><small>flexibel einsetzen</small></div></div>
+          <div class="heartbeat-cluster__details"><h3>Was Heartbeat dabei koordiniert</h3><ul class="heartbeat-feature-list"><li><strong>PV-Erzeugung</strong><span>Intelligent im Haus verteilen</span></li><li><strong>Batteriespeicher</strong><span>Vorausschauend laden und entladen</span></li><li><strong>Wärmepumpe</strong><span>In sinnvolle Zeitfenster verschieben</span></li><li><strong>Wallbox & E-Auto</strong><span>Bedarfsgerecht und intelligent laden</span></li><li><strong>Prognosen</strong><span>Wetter und Erzeugung berücksichtigen</span></li><li><strong>Gesamtsystem</strong><span>Verbrauch und Gerätezustände einbeziehen</span></li></ul><p class="heartbeat-honesty"><strong>Fair eingeordnet:</strong> Auch andere Energiemanager können den Eigenverbrauch optimieren. Die stärkere Differenzierung entsteht durch die Verbindung mit Strommarkt und Vermarktung.</p></div>
+        </section>
+
+        <section class="heartbeat-cluster heartbeat-cluster--purple" id="strombezug">
+          <div class="heartbeat-cluster__number">02</div>
+          <div class="heartbeat-cluster__intro"><p class="eyebrow">Günstiger Strombezug</p><h2>Strom nicht einfach kaufen – sondern zum richtigen Zeitpunkt.</h2><p>Wenn die eigene Energie nicht ausreicht, optimiert Heartbeat den Strombezug anhand verfügbarer Markt-, Verbrauchs- und Systeminformationen.</p><blockquote>Heartbeat entscheidet nicht nur, woher Energie kommt, sondern auch, wann sie möglichst wirtschaftlich eingekauft und genutzt wird.</blockquote></div>
+          <div class="heartbeat-cluster__visual heartbeat-price-card" aria-label="Strom wird in günstigen Preisfenstern bezogen">
+            <div class="heartbeat-price-card__top"><span>Preisverlauf am Strommarkt</span><span class="badge">vorausschauend</span></div><div class="heartbeat-price-bars"><i style="--h:72%"></i><i style="--h:58%"></i><i class="cheap" style="--h:24%"></i><i class="cheap active" style="--h:14%"></i><i class="cheap" style="--h:28%"></i><i style="--h:51%"></i><i style="--h:82%"></i><i style="--h:68%"></i></div><div class="heartbeat-price-card__times"><span>00</span><span>06</span><span>12</span><span>18</span><span>24 Uhr</span></div><div class="heartbeat-price-card__action"><span>Günstiges Zeitfenster erkannt</span><strong>Speicher und flexible Verbraucher einplanen</strong></div>
+          </div>
+          <div class="heartbeat-cluster__details"><h3>Wie der Strombezug optimiert wird</h3><ul class="heartbeat-feature-list"><li><strong>Dynamischer Stromtarif</strong><span>Preissignale für die Steuerung nutzen</span></li><li><strong>Day-Ahead</strong><span>Den nächsten Tag vorausschauend planen</span></li><li><strong>Intraday</strong><span>Auf veränderte Bedingungen reagieren</span></li><li><strong>Netzladen</strong><span>Speicher in günstigen Fenstern laden</span></li><li><strong>Flexible Verbraucher</strong><span>Teure Bezugszeiten möglichst vermeiden</span></li><li><strong>Arbitrage</strong><span>Preisunterschiede zwischen Zeitfenstern nutzen</span></li></ul><p class="heartbeat-honesty heartbeat-honesty--light"><strong>Der Unterschied:</strong> Heartbeat verbindet die Steuerung im Haus mit energiewirtschaftlichen Preissignalen und kann auf Day-Ahead- und Intraday-Mechanismen aufsetzen.</p></div>
+        </section>
+
+        <section class="heartbeat-cluster heartbeat-cluster--blue" id="vermarktung">
+          <div class="heartbeat-cluster__number">03</div>
+          <div class="heartbeat-cluster__intro"><p class="eyebrow">Stromvermarktung & Regelleistung</p><h2>Die eigene Energie und Flexibilität bekommen einen Marktwert.</h2><p>Das Haus wird nicht mehr nur optimiert, um möglichst wenig Strom einzukaufen. Erzeugung, Speicherung und Flexibilität können zunehmend aktiv in den Energiemarkt eingebunden werden.</p><blockquote>Heartbeat macht aus Ihrem Energiesystem einen aktiven Teilnehmer am Energiemarkt.</blockquote></div>
+          <div class="heartbeat-cluster__visual heartbeat-network-card" aria-label="Viele Haushalte werden im virtuellen Kraftwerk gebündelt"><svg viewBox="0 0 600 430" role="img"><path d="M95 85 300 215 505 85M95 345 300 215 505 345M300 50V215M300 380V215"/><g><circle cx="95" cy="85" r="40"/><circle cx="505" cy="85" r="40"/><circle cx="95" cy="345" r="40"/><circle cx="505" cy="345" r="40"/><circle cx="300" cy="50" r="34"/><circle cx="300" cy="380" r="34"/></g><circle class="core" cx="300" cy="215" r="82"/><text class="title" x="300" y="207">Virtuelles</text><text class="title" x="300" y="232">Kraftwerk</text><text class="home" x="95" y="91">⌂</text><text class="home" x="505" y="91">⌂</text><text class="home" x="95" y="351">⌂</text><text class="home" x="505" y="351">⌂</text><text class="home" x="300" y="57">⌂</text><text class="home" x="300" y="387">⌂</text></svg></div>
+          <div class="heartbeat-cluster__details"><h3>Wie Flexibilität Wert schaffen kann</h3><ul class="heartbeat-feature-list heartbeat-feature-list--status"><li><span class="status-dot status-dot--conditional"></span><strong>Direktvermarktung</strong><span>Solarstrom markt- und anlagenabhängig vermarkten</span></li><li><span class="status-dot status-dot--conditional"></span><strong>Optimierte Einspeisung</strong><span>Überschüsse wirtschaftlicher einsetzen</span></li><li><span class="status-dot status-dot--conditional"></span><strong>Speicherflexibilität</strong><span>Für Handel und Arbitrage nutzbar machen</span></li><li><span class="status-dot status-dot--conditional"></span><strong>Virtuelles Kraftwerk</strong><span>Viele dezentrale Anlagen bündeln</span></li><li><span class="status-dot status-dot--future"></span><strong>Regelleistung</strong><span>Perspektivisch zur Netzstabilisierung beitragen</span></li><li><span class="status-dot status-dot--future"></span><strong>Weitere Märkte</strong><span>Neue Flexibilitätsprodukte erschließen</span></li></ul><div class="heartbeat-status-legend"><span><i class="status-dot status-dot--conditional"></i>markt- und anlagenabhängig</span><span><i class="status-dot status-dot--future"></i>perspektivisch</span></div><p class="heartbeat-honesty"><strong>Wichtig:</strong> Die FCR-D-Fähigkeit ist in Schweden belegt. Eine flächendeckende Regelleistungsvermarktung deutscher Privathaushalte ist dagegen noch kein allgemeines Standardprodukt. Produktstatus und Marktzugang müssen immer für Land, Anlage und Vertrag geprüft werden.</p></div>
+        </section>
+      </div>
+
+      <section class="heartbeat-comparison">
+        <p class="eyebrow">Die Gesamtlogik</p><h2>Nutzen. Beschaffen. Vermarkten.</h2>
+        <div class="heartbeat-summary-flow"><div><span>01</span><strong>Eigene Energie optimal nutzen</strong><small>Eigenverbrauchsoptimierung</small></div><i>→</i><div><span>02</span><strong>Fehlende Energie günstig beschaffen</strong><small>Strombezug und Marktoptimierung</small></div><i>→</i><div><span>03</span><strong>Überschüsse wertvoll vermarkten</strong><small>Vermarktung und Flexibilität</small></div></div>
+      </section>
+
+      <section class="heartbeat-status">
+        <div class="section-heading"><p class="eyebrow">Transparent erklärt</p><h2>Verfügbarkeit wird nicht versprochen, sondern sauber eingeordnet.</h2><p>Der konkrete Funktionsumfang hängt von Land, Tarif, Vertrag, Messsystem, Marktzugang und kompatibler Hardware ab.</p></div>
+        <div class="grid grid--3"><article class="card status-card status-card--now"><span class="badge badge--success">Heute verfügbar</span><h3>Optimierung im Zuhause</h3><ul><li>Kompatible Komponenten vernetzen</li><li>Eigenverbrauch intelligent optimieren</li><li>Verbrauch, Wetter und Preise einplanen</li></ul></article><article class="card status-card status-card--next"><span class="badge">Markt- & anlagenabhängig</span><h3>Marktintegration</h3><ul><li>Dynamischer Tarif und Netzladen</li><li>Direktvermarktung und Einspeisung</li><li>Intraday, Arbitrage und virtuelles Kraftwerk</li></ul></article><article class="card status-card status-card--future"><span class="badge">Perspektivisch</span><h3>Weitere Flexibilitätsmärkte</h3><ul><li>Regelleistung in weiteren Märkten</li><li>Zusätzliche Systemdienstleistungen</li><li>Stärkere Nutzung dezentraler Flexibilität</li></ul></article></div>
+      </section>
+
+      <section class="heartbeat-closing">
+        <div>
+          <p class="eyebrow">Heartbeat AI</p><h2>Energie intelligent in beide Richtungen optimieren.</h2><p>Was Sie brauchen, wird möglichst günstig beschafft. Was Sie haben, wird intelligent genutzt und perspektivisch möglichst wertvoll vermarktet.</p><a class="heartbeat-button heartbeat-button--light" href="#main-content">Noch einmal ansehen</a>
+        </div>
+        <div class="heartbeat-closing__visual image-placeholder">
+          <span class="placeholder-tag">Platzhalter</span>
+          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10"/><path d="M10 20v-6h4v6"/></svg>
+          <span>Foto Zuhause mit Heartbeat AI</span>
+        </div>
+      </section>
+
+      <details class="heartbeat-sources"><summary>Quellen und weiterführende Informationen</summary><ul class="source-list"><li><a href="https://1komma5.com/de/fakten/" target="_blank" rel="noreferrer">1KOMMA5°: Offizielle Daten und technische Spezifikationen</a></li><li><a href="https://1komma5.com/de/strommarkt/virtuelles-kraftwerk/" target="_blank" rel="noreferrer">1KOMMA5°: Virtuelles Kraftwerk und Heartbeat AI</a></li><li><a href="https://www.epexspot.com/en/tradingproducts" target="_blank" rel="noreferrer">EPEX SPOT: Day-Ahead- und Intraday-Märkte</a></li></ul></details>
+      <footer class="footer">Funktionsumfang und Verfügbarkeit können je nach technischer Ausstattung, Tarif, Vertrag und regulatorischem Rahmen abweichen.</footer>
+    </div>
+  </main>
+</body>
+</html>

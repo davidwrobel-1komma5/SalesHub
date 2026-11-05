@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Veranschaulicht Eigenverbrauch und Einspeisung bei steigender Photovoltaikleistung.">
+  <title>PV-Ausnutzung verstehen | 1KOMMA5°</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow:wght@300;400;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/styles.css?v=20261020-brand">
+  <script src="assets/app.js?v=20261020-brand" defer></script>
+</head>
+<body data-page="pv-utilization-calculator">
+  <main class="content" id="main-content" tabindex="-1">
+    <div class="content-inner utilization-page">
+      <header class="page-header utilization-header">
+        <p class="eyebrow">Solarpotenzial verstehen</p>
+        <h1>Was bringt jede zusätzliche kWp?</h1>
+        <p>Sehen Sie, wie mit einer größeren Photovoltaikanlage sowohl der selbst genutzte Solarstrom als auch die Einspeisung wachsen.</p>
+      </header>
+
+      <section class="utilization-layout" aria-label="PV-Ausnutzung berechnen">
+        <form class="card utilization-controls" id="utilization-form" novalidate>
+          <div class="section-heading"><p class="eyebrow">Ihre Angaben</p><h2>Ausgangslage</h2></div>
+          <div class="parameter-list">
+            <div class="parameter">
+              <div class="parameter__head"><label for="util-consumption">Jahresstromverbrauch</label><div class="parameter__value"><input class="input" id="util-consumption" type="number" min="1000" max="20000" step="100" value="6000"><span class="parameter__unit">kWh</span></div></div>
+              <input id="util-consumption-range" type="range" min="1000" max="20000" step="100" value="6000" aria-label="Jahresstromverbrauch einstellen">
+              <div class="parameter__scale" aria-hidden="true"><span>1.000 kWh</span><span>20.000 kWh</span></div>
+            </div>
+            <div class="parameter">
+              <div class="parameter__head"><label for="util-storage">Nutzbare Speicherkapazität</label><div class="parameter__value"><input class="input" id="util-storage" type="number" min="0" max="30" step="0.5" value="6"><span class="parameter__unit">kWh</span></div></div>
+              <input id="util-storage-range" type="range" min="0" max="30" step="0.5" value="6" aria-label="Speicherkapazität einstellen">
+              <div class="parameter__scale" aria-hidden="true"><span>Ohne Speicher</span><span>30 kWh</span></div>
+            </div>
+            <div class="parameter parameter--selected">
+              <div class="parameter__head"><label for="util-pv">Anlagengröße auswählen</label><div class="parameter__value"><input class="input" id="util-pv" type="number" min="1" max="30" step="0.5" value="10"><span class="parameter__unit">kWp</span></div></div>
+              <input id="util-pv-range" type="range" min="1" max="30" step="0.5" value="10" aria-label="Photovoltaikleistung auswählen">
+              <div class="parameter__scale" aria-hidden="true"><span>1 kWp</span><span>30 kWp</span></div>
+            </div>
+          </div>
+          <div class="notice utilization-notice"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="9"/><path d="M12 10v6M12 7h.01"/></svg><div><strong>So ist der Graph zu lesen</strong><p>Die obere Fläche zeigt die gesamte Solarerzeugung. Je größer die Anlage wird, desto stärker wächst der eingespeiste Anteil.</p></div></div>
+        </form>
+
+        <section class="card utilization-chart-card" aria-labelledby="utilization-chart-heading">
+          <div class="utilization-chart-head">
+            <div><p class="eyebrow">Energie pro Jahr</p><h2 id="utilization-chart-heading">Eigenverbrauch und Einspeisung</h2></div>
+            <div class="utilization-legend" aria-label="Diagrammlegende"><span><i class="utilization-dot utilization-dot--own"></i>Selbst genutzt</span><span><i class="utilization-dot utilization-dot--feed"></i>Eingespeist</span><span><i class="utilization-line-key"></i>Ausnutzung je kWp</span></div>
+          </div>
+          <div class="utilization-chart" id="utilization-chart-wrap">
+            <svg id="utilization-chart" viewBox="0 0 900 430" role="img" aria-labelledby="utilization-chart-heading utilization-chart-description"></svg>
+            <p class="sr-only" id="utilization-chart-description">Diagramm zur Entwicklung von selbst genutztem und eingespeistem Solarstrom bei steigender Photovoltaikleistung.</p>
+            <div class="utilization-tooltip" id="utilization-tooltip" hidden></div>
+          </div>
+          <div class="utilization-axis-caption"><span>Installierte PV-Leistung</span><strong>kWp</strong></div>
+        </section>
+      </section>
+
+      <section class="utilization-results" aria-live="polite" aria-label="Ergebnis für die ausgewählte Anlagengröße">
+        <article class="utilization-result utilization-result--primary"><span>Ausgewählte Anlage</span><strong id="util-result-pv">10,0 kWp</strong><small id="util-result-generation">9.500 kWh Solarstrom pro Jahr</small></article>
+        <article class="utilization-result"><span>Selbst genutzt</span><strong id="util-result-own">3.693 kWh</strong><small id="util-result-own-percent">39 % der Erzeugung</small></article>
+        <article class="utilization-result"><span>Eingespeist</span><strong id="util-result-feed">5.807 kWh</strong><small id="util-result-feed-percent">61 % der Erzeugung</small></article>
+        <article class="utilization-result"><span>Ausnutzung je kWp</span><strong id="util-result-per-kwp">369 kWh</strong><small>selbst genutzt pro installierter kWp</small></article>
+      </section>
+
+      <section class="section utilization-explanation" aria-labelledby="utilization-explanation-heading">
+        <div><p class="eyebrow">Die Kernaussage</p><h2 id="utilization-explanation-heading">Mehr Einspeisung bedeutet nicht, dass zusätzliche Module ungenutzt sind.</h2></div>
+        <p>Eine größere Anlage produziert über das Jahr mehr Solarstrom. Der Verbrauch im Haus ist jedoch begrenzt. Deshalb steigt der selbst genutzte Anteil langsamer als die gesamte Erzeugung – und ein wachsender Teil wird ins Netz eingespeist.</p>
+      </section>
+
+      <footer class="footer">Prototyp auf Basis der bereitgestellten HTW-Kennwertmatrix und eines angenommenen spezifischen Jahresertrags von 950 kWh je kWp. Keine Ertragsgarantie oder Anlagenplanung.</footer>
+    </div>
+  </main>
+  <script src="assets/autarky-matrix.js"></script>
+  <script src="assets/pv-utilization.js?v=20260731"></script>
+</body>
+</html>
