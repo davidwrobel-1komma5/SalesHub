@@ -1,3 +1,5 @@
+const ROOT = new URL('../../', document.currentScript.src).href;
+
 const icons = {
   home: '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m3 11 9-8 9 8"/><path d="M5 10v10h14V10M9 20v-6h6v6"/></svg>',
   calculator: '<svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="2.5" width="16" height="19" rx="2"/><path d="M8 6.5h8v3H8zM8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01M16 18h.01"/></svg>',
@@ -11,18 +13,18 @@ const icons = {
 };
 
 const navigation = [
-  { id: 'home', href: 'index.html', label: 'Startseite', icon: icons.home },
+  { id: 'home', href: ROOT + 'index.html', label: 'Startseite', icon: icons.home },
   {
     id: 'calculators',
     label: 'Rechner',
     icon: icons.calculator,
     children: [
-      { id: 'calculator', href: 'heizungsfoerderrechner.html', label: 'Heizungsförderung' },
-      { id: 'pv-calculator', href: 'pv-wirtschaftlichkeitsrechner.html', label: 'Wirtschaftlichkeit' },
-      { id: 'wp-auslegung', href: 'wp-auslegung.html', label: 'WP-Auslegung' },
-      { id: 'independence-calculator', href: 'unabhaengigkeitsrechner.html', label: 'Unabhängigkeit' },
-      { id: 'pv-utilization-calculator', href: 'pv-ausnutzungsrechner.html', label: 'PV-Ausnutzung' },
-      { id: 'financing-calculator', href: 'finanzierungsrechner.html', label: 'Finanzierungsrechner' },
+      { id: 'calculator', href: ROOT + 'rechner/heizungsfoerderung.html', label: 'Heizungsförderung' },
+      { id: 'pv-calculator', href: ROOT + 'rechner/pv-wirtschaftlichkeit.html', label: 'Wirtschaftlichkeit' },
+      { id: 'wp-auslegung', href: ROOT + 'rechner/wp-auslegung.html', label: 'WP-Auslegung' },
+      { id: 'independence-calculator', href: ROOT + 'rechner/unabhaengigkeit.html', label: 'Unabhängigkeit' },
+      { id: 'pv-utilization-calculator', href: ROOT + 'rechner/pv-ausnutzung.html', label: 'PV-Ausnutzung' },
+      { id: 'financing-calculator', href: ROOT + 'rechner/finanzierung.html', label: 'Finanzierungsrechner' },
     ],
   },
   {
@@ -30,8 +32,8 @@ const navigation = [
     label: 'Energiemanagement',
     icon: icons.pulse,
     children: [
-      { id: 'heartbeat-pitch', href: 'heartbeat-ai.html', label: 'Heartbeat AI' },
-      { id: 'hems-comparison', href: 'hems-vergleich.html', label: 'HEMS-Vergleich' },
+      { id: 'heartbeat-pitch', href: ROOT + 'tools/heartbeat-ai.html', label: 'Heartbeat AI' },
+      { id: 'hems-comparison', href: ROOT + 'tools/hems-vergleich.html', label: 'HEMS-Vergleich' },
     ],
   },
   {
@@ -39,7 +41,7 @@ const navigation = [
     label: 'Wissen & Argumentation',
     icon: icons.knowledge,
     children: [
-      { id: 'objection-handling', href: 'einwandbehandlung.html', label: 'Häufige Fragen' },
+      { id: 'objection-handling', href: ROOT + 'einwandbehandlung/index.html', label: 'Häufige Fragen' },
     ],
   },
   {
@@ -47,7 +49,7 @@ const navigation = [
     label: 'Intern',
     icon: icons.lock,
     children: [
-      { id: 'te-booking', href: 'te-buchung.html', label: 'TE Buchung' },
+      { id: 'te-booking', href: ROOT + 'tools/te-buchung.html', label: 'TE Buchung' },
     ],
   },
 ];
@@ -78,11 +80,11 @@ function renderShell() {
     <a class="skip-link" href="#main-content">Zum Hauptinhalt</a>
     <div class="app-shell">
       <header class="mobile-header">
-        <a class="brand-lockup" href="index.html" aria-label="Energieberatung Startseite"><img class="brand-logo" src="assets/1komma5-logo.png" alt="1KOMMA5°"><span class="brand-product">Beratung</span></a>
+        <a class="brand-lockup" href="${ROOT}index.html" aria-label="Energieberatung Startseite"><img class="brand-logo" src="${ROOT}assets/img/1komma5-logo.png" alt="1KOMMA5°"><span class="brand-product">Beratung</span></a>
         <button class="menu-button" type="button" aria-label="Navigation öffnen" aria-expanded="false" aria-controls="main-navigation">${icons.menu}</button>
       </header>
       <aside class="sidebar" id="main-navigation" aria-label="Hauptnavigation" data-open="false">
-        <a class="brand-lockup" href="index.html" aria-label="Energieberatung Startseite"><img class="brand-logo" src="assets/1komma5-logo.png" alt="1KOMMA5°"><span class="brand-compact" aria-hidden="true">1K5°</span><span class="brand-product">Beratung</span></a>
+        <a class="brand-lockup" href="${ROOT}index.html" aria-label="Energieberatung Startseite"><img class="brand-logo" src="${ROOT}assets/img/1komma5-logo.png" alt="1KOMMA5°"><span class="brand-compact" aria-hidden="true">1K5°</span><span class="brand-product">Beratung</span></a>
         <button class="sidebar-collapse" type="button" aria-label="Navigation einklappen" aria-expanded="true">${icons.collapse}<span>Navigation einklappen</span></button>
         <p class="nav-section-label">Ihre Themen</p>
         <nav><ul class="nav-list">${links}</ul></nav>
